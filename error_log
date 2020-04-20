@@ -1,0 +1,2 @@
+[14-Apr-2020 15:33:54 UTC] PHP Fatal error:  Declaration of Symfony\Component\Translation\TranslatorInterface::setLocale($locale) must be compatible with Symfony\Contracts\Translation\LocaleAwareInterface::setLocale(string $locale) in /home/rtcsof5d8edw/public_html/sell-admin/vendor/symfony/translation/TranslatorInterface.php on line 24
+[17-Apr-2020 09:12:20 UTC] PHP Fatal error:  Class 'App\Http\Controllers\Api\Controller' not found in /home/rtcsof5d8edw/public_html/sell-admin/app/Modules/Product/Http/Controllers/ProductController.php on line 18
