@@ -20,7 +20,8 @@ class AuthController extends Controller
     public function __construct()
     {
     	auth()->setDefaultDriver('api');
-        $this->middleware('auth:api', ['except' => ['login','registration','me']]);
+        $this->middleware('auth:api', ['except' => ['login','registration','refresh']]);
+    //   $this->middleware('cors');
     }
 
     /**
@@ -46,7 +47,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        
+      // echo 'ok'; die();
       try {
                 $user = auth()->userOrFail();
         } catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) {
@@ -57,7 +58,22 @@ class AuthController extends Controller
         
             }
             
-       return response()->json(auth()->user());
+        // header('Access-Control-Allow-Origin: *');
+        // header('Access-Control-Allow-Methods: *');
+        // header('Access-Control-Allow-Headers: *');
+        
+        // echo json_encode(auth()->user());
+    //    echo url('/');  
+    
+      $userData = auth()->user();
+      if(!is_null($userData->image_path)){
+          
+          $userData->image_path =  url('/').'/images/profileimages/'.$userData->image_path;
+          
+          $userData->image_path = str_replace('server.php','public',$userData->image_path );
+      } 
+    
+      return response()->json($userData);
     }
 
     /**
@@ -79,6 +95,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
+       
         
         try {
                 $user = auth()->userOrFail();
@@ -183,5 +200,7 @@ class AuthController extends Controller
             } 
         }
     }
+
+
     
 }
