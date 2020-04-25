@@ -1,0 +1,48 @@
+.invoice-calculation{
+	margin-top: -10px;
+	margin-left: 4px;
+}
+.white_bg{
+	background-color:white !important;
+}
+.invoice-calculation tr{
+	background-color:#f9f9f9
+}
+.invoice-calculation tr:nth-child(2n){
+	background-color:white !important;
+}
+.invoice-calculation-container{
+	padding-right: 4px !important;}
+.box { border-top: 2px solid #ebebea;color: black; font-size: 26px; padding-top: 10px;}
+.col-sm-12.col-md-12.col-xs-12.payment-options {padding-left: 0px;padding-right: 0px;margin-top: 25px;}
+.row.payment-options { margin-top: 25px;}
+.box2 {border: 1px solid #ebebea;padding-bottom: 6px;}
+.box2 h4 { color: black;}
+.box2 p { color: black;  margin-left: 25px; font-weight:bold; text-transform: capitalize;}
+.box2 form { margin-top: 25px;}
+.box2 label { color: black; font-weight: bold;}
+.form-control {border-radius:0px;}
+.payment-options .btn {border-radius:9px;font-weight:bold;margin-left: 70px;padding: 5px 20px;background:#0000B2;}
+
+.box2 h5 { color: black; text-align: justify;}
+.col-sm-3 { padding-right: 0px;}
+.col-sm-9 { padding-left: 0px;}
+.box3 { padding: 24px;}
+.text { font-size: 15px; padding-bottom: 12px;}
+.text2 { font-size: 13px;}
+.text1 {  font-size: 12px; padding-top: 12px;}
+.col-sm-3.block {
+    padding-left: 0px;
+}
+
+@media screen and (min-width: 991px){
+	.box2 {
+		margin-right: 1%;
+		flex: 0 0 32%;
+	}
+}
+@media screen and (max-width: 991px){
+	.payment-options .btn { margin-left: 40%; }
+	.payment-options .box2 {margin-bottom: 20px;}
+	.wallet p{ text-align:center;}
+}
