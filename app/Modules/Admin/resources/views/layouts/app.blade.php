@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="{{ asset('admin/css/datatables.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/fullcalendar.min.css') }}">
     <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('admin/css/custom.css') }}">
     <!-- Page Level Stylesheets -->
 </head>
 

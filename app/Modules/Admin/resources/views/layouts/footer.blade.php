@@ -17,7 +17,7 @@
     <script src="{{ asset('admin/js/ion.rangeSlider.min.js') }}"></script>
     <script src="{{ asset('admin/js/datatables.min.js') }}"></script>
     <script src="{{ asset('admin/js/main.js') }}"></script>
-
+    <script src="{{ asset('admin/js/dashboard.js') }}"></script>
     <!-- Page Level Scripts -->
 
 </body>

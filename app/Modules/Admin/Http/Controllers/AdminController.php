@@ -4,7 +4,7 @@ namespace App\Modules\Admin\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-
+use Session;
 class AdminController extends Controller
 {
 	/**
@@ -31,9 +31,16 @@ class AdminController extends Controller
 
     public function dashboard()
     {
-        /*echo "hrere"; die();*/
         return view("Admin::dashboard");
     }
+
+/*    public function getUser()
+    {
+        echo "hrere"; die();
+        return view("Admin::user.users");
+    }*/
+
+    
 
 }
 

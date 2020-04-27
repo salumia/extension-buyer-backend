@@ -44,11 +44,11 @@ class ClientController extends Controller
             'update_image'=>'required|numeric',
             'email' => 'required|email',
             'address_line' => 'required',
-            'state' =>'required|max:50',
+            'country_id' => 'required|max:20',
+            'state_id' =>'required|max:20',
             'zip_code' => 'required|max:20',
-            'country' => 'required|max:50',
             'phone_no' => 'required',
-            'city' => 'required|max:50'
+            'city_id' => 'required|max:20'
         
         ]);
         
@@ -100,11 +100,11 @@ class ClientController extends Controller
                     $user->last_name = $request->last_name;
                     $user->address_line = $request->address_line;
                     $user->email = $request->email;
-                    $user->state = $request->state;
-                    $user->country = $request->country;
+                    $user->state_id = $request->state_id;
+                    $user->country_id = $request->country_id;
                     $user->zip_code = $request->zip_code;
                     $user->phone_no = $request->phone_no;
-                    $user->city = $request->city;
+                    $user->city_id = $request->city_id;
                    // $user->password = Hash::make($request->password);
                     
                     if($updateImage){

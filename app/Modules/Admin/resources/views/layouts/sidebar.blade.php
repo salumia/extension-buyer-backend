@@ -58,6 +58,17 @@
                     </li>
                     <li>
                         <a href="#">
+                            <i class="fa fa-user-circle"></i>
+                            <span>Manage User</span>
+                        </a>
+
+                        <ul>
+                            <li><a href="{{ url('admin/user') }}">Listing</a></li>
+                            <li><a href="{{ url('admin/user/create') }}">Add User</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">
                             <i class="fa fa-shopping-cart"></i>
                             <span>Ecommerce</span>
                         </a>

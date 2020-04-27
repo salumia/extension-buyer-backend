@@ -46,3 +46,6 @@
 	.payment-options .box2 {margin-bottom: 20px;}
 	.wallet p{ text-align:center;}
 }
+.error{
+	color: red;
+}

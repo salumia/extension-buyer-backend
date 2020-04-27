@@ -7,6 +7,10 @@ Route::get('admin/login', 'Auth\LoginController@showLoginForm')->name('admin.log
 
 Route::post('admin/login', 'Auth\LoginController@login');
 
+/*Route::get('admin/users', 'UserController@getUser');
+*/
+Route::resource('admin/user','UserController');
+
 /*Route::post('admin/logout', 'Auth\LoginController@logout');
 
 //Auth::routes();

@@ -41,20 +41,17 @@ class PasswordResetController extends Controller
                 'token' => str_random(60)
              ]
         );
-        
-
-        //$mailData  = array('name' => $user->name, 'email'=>$user->email,'token'=>$passwordReset['token']);
-
-            $resetLink =  "<a target='_blank' href='trigvent.com/extensionbuyer/reset-password/".$passwordReset['token']."'> Click Here to reset password</a>";
-		    $html = "Hey ".$user['name']."
-		    We received a request to reset your password
-		   ".$resetLink."
-			<hr/>
-			";
-            $headers='ext@gmail.com';
-            mail($user['email'], "Reset password ",$html);
-            $response = array('status'=>'true', 'message'=>'We have e-mailed your password reset link!');
-            return response()->json($response);
+        $resetLink =  "<a target='_blank' href='trigvent.com/extensionbuyer/reset-password/".$passwordReset['token']."'> Click Here to reset password</a>";
+        $to = $user['email'];
+        $subject = 'Reset password';
+        $headers = "From: extensionbuyer@gmail.com\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+        $message ="<p><strong>Hey " .$user['name'] . "</strong></p>";
+        $message .="We received a request to reset your password  ".$resetLink."\r\n";
+        mail($to, $subject, $message, $headers);
+        $response = array('status'=>'true', 'message'=>'We have e-mailed your password reset link!');
+        return response()->json($response);
     }
 
     /**

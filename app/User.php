@@ -11,6 +11,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Modules\Country\Models\Country as Country;
+
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -61,4 +63,8 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+    public function getcountry() {
+        return $this->belongsTo(Country::class,'country_id')->select(array('id','name'));
+    }
+   
 }
