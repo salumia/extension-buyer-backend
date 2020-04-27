@@ -22,7 +22,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users=User::all();
+        if (isset($_GET['email'])){
+          $users = User::Where('email', 'like', '%' . $_GET['email'] . '%')->orderBy('id', 'DESC')->get();
+        }else{
+            $users = User::all();
+        } 
         $country=Country::all();
         return view('Admin::user.users',compact('users','country'));
     }
@@ -35,9 +39,7 @@ class UserController extends Controller
     public function create()
     {
         $countries=Country::orderBy('name','ASC')->get();
-        $cities=City::orderBy('name','ASC')->get();
-        $states=State::orderBy('name','ASC')->get();
-        return view('Admin::user.add_user',compact('countries','cities','states'));
+        return view('Admin::user.add_user',compact('countries'));
     }
 
     /**

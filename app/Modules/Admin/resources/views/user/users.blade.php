@@ -56,14 +56,16 @@
                 <div class="panel">
                     <!-- Records Header Start -->
                     <div class="records--header">
-                        <div class="title fa-user-circle">
-                            <h3 class="h3">Users <a href="#" class="btn btn-sm btn-outline-info">Manage Users</a></h3>
-                            <p>Found Total 1,330 Orders</p>
+                        
+                        <div class="title">
+                          <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
+                            
                         </div>
 
                         <div class="actions">
-                            <form action="#" class="search">
-                                <input type="text" class="form-control" placeholder="User Email or User Name..." required>
+                            <form action="{{url('admin/user')}}" method="get" class="search">
+                                {{ csrf_field() }}
+                                <input id='search-email' type="text" class="form-control" name="email" placeholder="Email..." required>
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
@@ -72,6 +74,27 @@
                 </div>
 
                 <div class="panel">
+
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-success">
+                            <p>{{ $message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </p>
+                            
+                        </div>
+                    @endif
+                    @if ($message = Session::get('error'))
+                        <div class="alert alert-danger">
+                            <p>{{ $message }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </p>
+                            
+                        </div>
+                    @endif
                     <!-- Records List Start -->
                     <div class="records--list" data-title="Users Listing">
                         <table id="recordsListView">

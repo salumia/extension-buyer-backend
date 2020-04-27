@@ -1,5 +1,49 @@
 var apiBaseUrl = 'http://127.0.0.1:8000/api';
 $( document ).ready(function() { 
+	
+	$('#back-user-list').on('click',function(){
+        window.history.back();
+    }) 
+
+    $('#country_id').on('change',function(){
+    	$id=$(this).val();
+    	$('#state_id').find('option').remove();
+    	$('#city_id').find('option').remove();
+    	$.ajax({
+            type: "GET",
+            url: apiBaseUrl+"/getstate/"+$id,
+            dataType: 'json',
+        }).done(function(response) {
+        	html ='<option value="">Please Select State</option>';
+            if (response.status == 200) {
+              	response.state.forEach(function(item, index){
+           		 	html +=`<option value="`+item.id+`">`+item.name+`</option>`;
+       		 	});
+       		 	$('#state_id').append(html);
+            } 
+        });
+    	
+    });
+
+    $('#state_id').on('change',function(){
+    	$id=$(this).val();
+    	$('#city_id').find('option').remove();
+    	$.ajax({
+            type: "GET",
+            url: apiBaseUrl+"/getcity/"+$id,
+            dataType: 'json',
+        }).done(function(response) {
+        	html ='<option value="">Please Select city</option>';
+            if (response.status == 200) {
+              	response.city.forEach(function(item, index){
+           		 	html +=`<option value="`+item.id+`">`+item.name+`</option>`;
+       		 	});
+       		 	$('#city_id').append(html);
+            } 
+        });
+    	
+    })
+
 	$("#add-user-form").validate({
 		rules: {
 			firstName: {
@@ -116,4 +160,32 @@ $( document ).ready(function() {
 		}
 	});
 
+
+	var getSearchParameter =   getUrlParameter('search');
+
+	if(getSearchParameter != ''){
+		$('#search-tab').val(getSearchParameter);
+	}
+
+	var getSearchEmailParameter =   getUrlParameter('email');
+
+	if(getSearchEmailParameter != ''){
+		$('#search-email').val(getSearchEmailParameter);
+	}
+
 });	
+
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};

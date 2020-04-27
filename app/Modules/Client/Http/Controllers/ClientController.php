@@ -48,7 +48,8 @@ class ClientController extends Controller
             'state_id' =>'required|max:20',
             'zip_code' => 'required|max:20',
             'phone_no' => 'required',
-            'city_id' => 'required|max:20'
+            'city_id' => 'required|max:20',
+            'status' =>'required',
         
         ]);
         
@@ -105,6 +106,7 @@ class ClientController extends Controller
                     $user->zip_code = $request->zip_code;
                     $user->phone_no = $request->phone_no;
                     $user->city_id = $request->city_id;
+                    $user->status =$request->status;
                    // $user->password = Hash::make($request->password);
                     
                     if($updateImage){

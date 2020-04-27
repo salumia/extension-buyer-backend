@@ -160,12 +160,13 @@ class AuthController extends Controller
 				return response()->json(['error'=>$validator->errors()], 401);            
 			}
 			$pw = $request->password;
-	
+	        $status = 1;
 			$user =new User;
 			$user->name = $request->first_name;
 			$user->last_name = $request->last_name;
 			$user->email = $request->email;
 			$user->Password=Hash::make($pw);
+            $user->status=$status;
 			
 			$user->save();
 			 // echo $user->id;
@@ -186,13 +187,13 @@ class AuthController extends Controller
             }else{
                 
                 $pw = bcrypt('%s=adfh8sdf');
-	
+	            $status = 1;
 		    	$user =new User;
     			$user->name = $request->first_name;
     			$user->last_name = $request->last_name;
     			$user->email = $request->email;
     			$user->Password=Hash::make($pw);
-    			
+    			$user->status=$status;
     			$user->save();
 
                 $token = auth()->tokenById($user->id);
