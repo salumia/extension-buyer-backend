@@ -94,6 +94,19 @@
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
             </div>
+
+           <!--  <form name="addListing_form" action="javascript:void(0)" id="addListing_form" enctype="multipart/form-data">
+                        
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="uploadimage" id="uploadimage">
+                                <label class="custom-file-label" for="customFile" id="add_file">Choose Pic</label>
+                            </div>
+                        </div>                        
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary" id="addListing_form">submit</button>
+                        </div>
+                    </form>  -->
         </div>
     </body>
 </html>

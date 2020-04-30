@@ -1,18 +1,28 @@
 @extends('Admin::layouts.app')
 @section('content')
-<!-- Wrapper Start -->
-    <div class="wrapper box full-page">
+<div class="wrapper">
         <!-- Login Page Start -->
+        <div class="m-account-w" data-bg-img="assets/img/account/wrapper-bg.jpg">
             <div class="m-account">
-                <div class="row no-gutters flex-row-reverse">
+                <div class="row no-gutters">
+                    <div class="col-md-6">
+                        <!-- Login Content Start -->
+                        <!-- <div class="m-account--content-w" data-bg-img="assets/img/account/content-bg.jpg">
+                            <div class="m-account--content">
+                                <h2 class="h2">Don't have an account?</h2>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                <a href="register.html" class="btn btn-rounded">Register Now</a>
+                            </div>
+                        </div> -->
+                        <!-- Login Content End -->
+                    </div>
 
-                    <div class="col-md-6 account">
+                    <div class="col-md-6">
                         <!-- Login Form Start -->
                         <div class="m-account--form-w">
                             <div class="m-account--form">
                                 <!-- Logo Start -->
                                 <div class="logo">
-                                    
                                     <img src="{{ asset('admin/img/logo1.png') }}" alt="">
                                 </div>
                                 <!-- Logo End -->
@@ -24,18 +34,17 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <i class="fa fa-envelope"></i>
+                                                <i class="fas fa-user"></i>
                                             </div>
 
-                                             <input id="email" type="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email"  required autocomplete="email" autofocus>
-
-                                             @if ($errors->has('email'))
+                                            <input id="email" type="email" placeholder="Email" class="form-control @error('email') is-invalid @enderror" name="email"  required autocomplete="email" autofocus>
+                                            @if ($errors->has('email'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('email') }}</strong>
                                                 </span>
                                            @endif
                                         </div>
-                                         @if(session()->has('userstatus'))
+                                        @if(session()->has('userstatus'))
                                         <label class="error">
                                             {{ session()->get('userstatus') }}
                                         </label>
@@ -45,47 +54,36 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <i class="fa fa-key"></i>
+                                                <i class="fas fa-key"></i>
                                             </div>
 
                                             <input placeholder="Password" id="password" type="password" class="form-control @error('password') is-invalid @enderror"  name="password"  required autocomplete="current-password">
 
-                                              @if ($errors->has('password'))
+                                            @if ($errors->has('password'))
                                                 <span class="invalid-feedback" role="alert">
                                                     <strong>{{ $errors->first('password') }}</strong>
                                                 </span>
                                             @endif
                                         </div>
-
-                                       
-
                                     </div>
-                                    <div class="m-account--actions text-center">
-                                        <button type="submit" class="btn btn-block btn-rounded btn-info">Login</button>
-                                    </div>
-                                    <!--<div class="m-account--actions text-center">-->
-                                    <!--    <div class="col-md-12 text-center">-->
-                                    <!--    <a href="{{ route('password.request') }}" class="btn-link">Forgot Password?</a> <a href="{{ url('/register') }}" class="btn-link">Register</a>-->
-                                    <!--    </div>-->
-                                    <!--</div>-->
 
                                     <div class="m-account--actions">
-                                        <a href="#" class="btn-link">Forgot Password?</a>
+                                        <!-- <a href="#" class="btn-link">Forgot Password?</a> -->
 
-                                        <button type="submit" class="btn btn-rounded btn-info">Login</button>
+                                        <button type="submit" class="btn btn-block btn-rounded btn-info">Login</button>
                                     </div>
 
-                                    <div class="m-account--alt">
+                                    <!-- <div class="m-account--alt">
                                         <p><span>OR LOGIN WITH</span></p>
 
                                         <div class="btn-list">
                                             <a href="#" class="btn btn-rounded btn-warning">Facebook</a>
                                             <a href="#" class="btn btn-rounded btn-warning">Google</a>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <div class="m-account--footer">
-                                        <p>&copy; extension buyer</p>
+                                        <p>&copy; 2020 ExtensionBuyer</p>
                                     </div>
                                 </form>
                             </div>
@@ -94,7 +92,7 @@
                     </div>
                 </div>
             </div>
-        
+        </div>
         <!-- Login Page End -->
     </div>
     <!-- Wrapper End -->

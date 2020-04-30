@@ -127,7 +127,7 @@
                                         @endforeach
                                     </td>
                                     @php
-                                    $status=array('0'=>'Deactivated','1'=>'Pending','2'=>'Activated')
+                                    $status=array('0'=>'Deactivated','1'=>'Pending','2'=>'Activated');
                                     @endphp
                                     <td>
                                         @foreach($status as $s => $s_value)
@@ -143,12 +143,12 @@
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
 
                                             <div class="dropdown-menu">
-                                                <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info">Edit</button></a>
+                                                <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
 
                                                 <form style="margin-left: 24px;" action="{{url('admin/user/'.$user->id)}}" method="post">
                                                 {!! csrf_field() !!} 
                                                 {{Method_field('DELETE')}}
-                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info" onClick="return confirm('Are you really want to delete this User')" >Delete</button>
+                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this User')" >Delete</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -161,6 +161,18 @@
                         </table>
                     </div>
                     <!-- Records List End -->
+                     <form name="addListing_form" action="javascript:void(0)" id="addListing_form"  enctype="multipart/form-data" multiple>
+                        
+                        <div class="form-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="uploadimage[]" id="uploadimage" multiple>
+                                <label class="custom-file-label" for="customFile" id="add_file">Choose Pic</label>
+                            </div>
+                        </div>                        
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary" id="addListing">submit</button>
+                        </div>
+                    </form>
                 </div>
             </section>
             <!-- Main Content End -->

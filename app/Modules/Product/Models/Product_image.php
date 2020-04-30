@@ -8,7 +8,7 @@ class Product_image extends Model
 {
     
       protected $fillable = [
-        "user_id","image_path","type"
+        "product_id","image_path","type"
     ];
     
 }

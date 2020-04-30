@@ -1,8 +1,8 @@
 <?php
 $adminData = Session::get('adminSessionData');
-$userId = $adminData['id'];
-$userName = $adminData['name'];
-$userEmail = $adminData['email'];
+$adminId = $adminData['id'];
+$adminName = $adminData['name'];
+$adminEmail = $adminData['email'];
 ?>
 
 <!-- Navbar Start -->
@@ -89,16 +89,16 @@ $userEmail = $adminData['email'];
                     <li class="nav-item dropdown nav--user online">
                         <a href="#" class="nav-link" data-toggle="dropdown">
                             <img src="{{ asset('admin/img/avatars/01_80x80.png')}}" alt="" class="rounded-circle">
-                            <span>{{$userName}}</span>
+                           <span>{{$adminName}}</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li><a href="profile.html"><i class="far fa-user"></i>Profile</a></li>
-                            <li><a href="mailbox_inbox.html"><i class="far fa-envelope"></i>Inbox</a></li>
-                            <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li>
-                            <li class="dropdown-divider"></li>
-                            <li><a href="lock-screen.html"><i class="fa fa-lock"></i>Lock Screen</a></li>
+                            <!-- <li><a href="{{ url('admin/profile') }}"><i class="far fa-user"></i>Profile</a></li> -->
+                            <!-- <li><a href="mailbox_inbox.html"><i class="far fa-envelope"></i>Inbox</a></li>
+                            <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li> -->
+                            <!-- <li class="dropdown-divider"></li> -->
+                            <li><a href="{{ url('admin/editProfile/'.$adminId) }}"><i class="fa fa-edit"></i>Edit profile</a></li>
                             <li><a href="{{ route('logout') }}"onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i>Logout</a></li>
 

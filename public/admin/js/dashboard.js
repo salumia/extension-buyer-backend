@@ -3,7 +3,15 @@ $( document ).ready(function() {
 	
 	$('#back-user-list').on('click',function(){
         window.history.back();
-    }) 
+    });
+
+    setTimeout(function(){
+		$(".alert.alert-success").hide();
+	}, 2000);
+
+	setTimeout(function(){
+		$(".alert.alert-danger").hide();
+	}, 2000);
 
     $('#country_id').on('change',function(){
     	$id=$(this).val();
@@ -173,6 +181,106 @@ $( document ).ready(function() {
 		$('#search-email').val(getSearchEmailParameter);
 	}
 
+	$("#admin-change-password").validate({
+		rules: {
+			password: {
+				required: true,
+				minlength:6,
+				maxlength:15
+			},
+			confirmpassword:{
+				required: true,
+				minlength:6,
+				maxlength:15,
+				equalTo: "#admin-password"
+			}
+		},
+		  messages: {
+		   
+			confirmpassword: {
+			  required: "This field is required.",
+			  equalTo: "Password is not matched."
+			}
+		  },
+		
+		submitHandler: function() {            
+			form.submit();
+		}
+	});
+
+$("#profile-admin-edit").validate({
+        rules: {
+            
+            email:{
+                required: true,
+                email:true
+            }
+        },
+          messages: {
+          
+            email: {
+              required: "This field is required.",
+            }
+          },
+        
+        submitHandler: function() {            
+            form.submit();
+        }
+    });
+
+
+$('#addListing_form').validate({
+        rules: {
+        	uploadimage: {
+                required: true
+            }
+        },
+        messages: {
+			uploadimage: {
+                required: "image can not be empty"
+            }
+        },
+        submitHandler: function() {
+            addDefaultSetting();
+            return false;
+        }
+    });
+
+
+	function addDefaultSetting(){
+
+		var data = new FormData();
+		 jQuery.each($('input[name^="uploadimage"]')[0].files, function(i, file) {
+                data.append( i, file);
+            });
+		 console.log(data);
+		/*var files = $('#uploadimage')[0].files[0];*/
+		/*var files = $('#uploadimage')[0].files;
+			
+
+		if(files != undefined){
+			data.append('uploadimage',files);
+		} else {
+			data.append('uploadimage','');
+		}*/
+
+		var type='banner';
+		$.ajax({
+	        type: 'post',
+	        url: apiBaseUrl+'/product/uploadimage/'+type,
+	        dataType:'json',
+	        data: data,
+    		contentType: false,
+    		
+			processData: false,
+	        success: function(response){
+	        	console.log(response)
+	            	
+	        },error: function(jqXHR, textStatus) {
+	           console.log(textStatus);
+	        },
+		 });
+	}
 });	
 
 function getUrlParameter(sParam) {

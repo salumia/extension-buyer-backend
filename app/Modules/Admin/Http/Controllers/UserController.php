@@ -39,6 +39,8 @@ class UserController extends Controller
     public function create()
     {
         $countries=Country::orderBy('name','ASC')->get();
+        /*$cities=City::orderBy('name','ASC')->get();
+        $states=State::orderBy('name','ASC')->get();*/
         return view('Admin::user.add_user',compact('countries'));
     }
 
@@ -80,7 +82,7 @@ class UserController extends Controller
         $user->address_line=$request->address_line;
         $user->zip_code=$request->zip_code;
         $user->save();
-        if(!empty($request->lastName)){
+       /* if(!empty($request->lastName)){
             /*$to=$request->lastName;
             $subject = 'Extension buyer Account Details';
             $headers = "From: extensionbuyer@gmail.com\r\n";
@@ -91,12 +93,12 @@ class UserController extends Controller
             $message ="<p><strong>Thankyou</strong></p>";
             mail($to, $subject, $message, $headers);*/
 
-            Mail::send('Admin.user', ['user' => $request->name], function ($m) use ($user) {
+            /*Mail::send('Admin.user', ['user' => $request->name], function ($m) use ($user) {
                 $m->from('extensionByer@gmail.com', 'Your Account Details');
 
                 $m->to($request->email, $request->name)->subject('Account Details');
             });
-        }
+        }*/
         return redirect('/admin/user')->with('success','User Saved Successfully.');
     
     }
@@ -121,9 +123,11 @@ class UserController extends Controller
     public function edit($id)
     {
         $user=User::find($id);
+        //$country_id=$user->country_id;
+        //$state_id=$user->state_id;
+        $states=State::where('country_id',$user->country_id)->orderBy('name','ASC')->get();
+        $cities=City::where('state_id',$user->state_id)->orderBy('name','ASC')->get();
         $countries=Country::orderBy('name','ASC')->get();
-        $cities=City::orderBy('name','ASC')->get();
-        $states=State::orderBy('name','ASC')->get();
         return view('Admin::user.edit_user',compact('user','countries','cities','states'));
     }
 
