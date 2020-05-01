@@ -168,6 +168,53 @@ $( document ).ready(function() {
 		}
 	});
 
+	
+	$("#add-category-form").validate({
+		rules: {
+			categoryName: {
+				required: true
+			},
+			status: {
+				required: true
+			}
+		},
+		  messages: {
+			categoryName: {
+			  required: "categoryName is required."
+			},
+			status: {
+			  required: "Status is required."
+			}
+		  },
+		
+		submitHandler: function() {            
+			form.submit();
+		}
+	});
+
+	$("#edit-category-form").validate({
+		rules: {
+			categoryName: {
+				required: true
+			},
+			status: {
+				required: true
+			}
+		},
+		  messages: {
+			categoryName: {
+			  required: "categoryName is required."
+			},
+			status: {
+			  required: "Status is required."
+			}
+		  },
+		
+		submitHandler: function() {            
+			form.submit();
+		}
+	});
+	
 
 	var getSearchParameter =   getUrlParameter('search');
 
@@ -180,6 +227,14 @@ $( document ).ready(function() {
 	if(getSearchEmailParameter != ''){
 		$('#search-email').val(getSearchEmailParameter);
 	}
+
+	var getSearchCategoryParameter =   getUrlParameter('category');
+
+	if(getSearchCategoryParameter != ''){
+		$('#search-category').val(getSearchCategoryParameter);
+	}
+
+	
 
 	$("#admin-change-password").validate({
 		rules: {
