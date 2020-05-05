@@ -88,8 +88,6 @@ class ProductController extends Controller
             "total_users"=> "required|min:0",
             "publish_date"=> "required|date_format:d/m/Y",
             //"negotiate"=> "required|min:0|max:1",
-            //"country_id"=>"required",
-            //"users"=>"required",
             "website"=> "required|url"
             //:
         ]);
@@ -128,7 +126,7 @@ class ProductController extends Controller
         $product->status = 0;
         $product->price = $postbody->price;
         $product->service_fee =  20; //$postbody->service_fee;
-        $product->visibilty = 0;
+        $product->visibilty = $request->visibilty;
         $product->negotiate = 0;
         $product->is_sold = 0;
         $product->currency = $request->currency;
@@ -225,10 +223,11 @@ class ProductController extends Controller
             $userId = auth()->user()->id;
             
             $active = array();
-            $products=DB::table('products')->select( 'id','product_name as name','product_type as type','status')->where('user_id', '=', $userId)->whereIn('status', [0, 1, 5])->get();
+            $products=DB::table('products')->select( 'id','product_name as name','visibilty','product_type as type','status')->where('user_id', '=', $userId)->whereIn('status', [0, 1, 5])->get();
             
             $products1 = (array) $products->toArray();
-            foreach($products1 as $key => $product){
+            if(count($products1)>0){
+              foreach($products1 as $key => $product){
                 $product = (array) $product;
                 $productType=$product['type'];
                 $product_id=$product['id'];
@@ -257,14 +256,16 @@ class ProductController extends Controller
                 $images = (array)  $image->toArray();
                 $product['images'] = $images;
                 $active[] = $product;
+              }
             }
             
 /*----------------------status-Progress----------------------------------------*/
 
             $in_progress=array();
-            $products2=DB::table('products')->select( 'id','product_name as name','product_type as type','status')->where('user_id', '=', $userId)->where('status', '=',2)->get();
+            $products2=DB::table('products')->select( 'id','product_name as name','visibilty','product_type as type','status')->where('user_id', '=', $userId)->where('status', '=',2)->get();
             $product_in = (array) $products2->toArray();
-            
+           if(count($product_in)>0){
+                
             $buyerName=DB::table('users')->select('name')->where('id','=',$userId)->first();
             $recived_offer=DB::table('products')->where('user_id', '=', $userId)->count();
             $sold_offer=DB::table('products')->where('user_id', '=', $userId)->where('status', '=',2)->count();
@@ -296,46 +297,49 @@ class ProductController extends Controller
                 }
                 $images = (array)  $image->toArray();
                 $product_in['images'] = $images;
-                $in_progess[] = $product_in;      
+                $in_progress[] = $product_in;      
              }
+            }
  /*------------------------------status-sold--------------------------------------------*/
             $sold=array();
-            $products3=DB::table('products')->select( 'id','product_name as name','product_type as type','status')->where('user_id', '=', $userId)->whereIn('status', [3,4])->get();
+            $products3=DB::table('products')->select( 'id','product_name as name','visibilty','product_type as type','status')->where('user_id', '=', $userId)->whereIn('status', [3,4])->get();
             $product_sold = (array) $products3->toArray(); 
-            
-            $buyerName=DB::table('users')->select('name')->where('id','=',$userId)->first(); 
-            $recived_offer=DB::table('products')->where('user_id', '=', $userId)->count();
-            $sold_offer=DB::table('products')->where('user_id', '=', $userId)->where('status', '=',3 or 'status','=',4)->count();
-            
-             foreach ($product_sold as $key => $product) {
-                $product_sold = (array) $product;
-                $product_id=$product_sold['id'];
+            if(count($product_sold)>0){
+                $buyerName=DB::table('users')->select('name')->where('id','=',$userId)->first(); 
+                $recived_offer=DB::table('products')->where('user_id', '=', $userId)->count();
+                $sold_offer=DB::table('products')->where('user_id', '=', $userId)->where('status', '=',3 or 'status','=',4)->count();
                 
-                $productType=$product_sold['type'];
-                $product_type = ProductType::select('type')->where('id','=',$productType)->first();
-                $product_sold['type']=$product_type->type;
-                
-                $offers=DB::table('offers')->select('buyer_id')->where('product_id','=',$product_id)->get();
-                foreach($offers as $offer){
-                    $offers = (array) $offer;
-                    $buyer_id=$offers['buyer_id'];
+                 foreach ($product_sold as $key => $product) {
+                    $product_sold = (array) $product;
+                    $product_id=$product_sold['id'];
+                    
+                    $productType=$product_sold['type'];
+                    $product_type = ProductType::select('type')->where('id','=',$productType)->first();
+                    $product_sold['type']=$product_type->type;
+                    
+                    $offers=DB::table('offers')->select('buyer_id')->where('product_id','=',$product_id)->get();
+                    foreach($offers as $offer){
+                        $offers = (array) $offer;
+                        if($offers['buyer_id']){
+                            $buyer_id=$offers['buyer_id'];
+                        }
+                    }
+                    $product_sold['buyer_id']=$buyer_id;
+                    $product_sold['buyer_name']=$buyerName->name;
+                    $product_sold['recived_offer'] = $recived_offer;
+                    $product_sold['sold_offer'] = $sold_offer;
+                    $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $product_id)->get();
+                    foreach($image as $img){
+                        $name=$img->image_path;
+                        $url =  url('/').'/images/productmedia/'.$name;
+                        $img->image_path =str_replace("server.php","public",$url);
+                    }
+                    $images = (array)  $image->toArray();
+                    $product_sold['images'] = $images;
+                    $sold[] = $product_sold;   
                 }
-                $product_sold['buyer_id']=$buyer_id;
-                $product_sold['buyer_name']=$buyerName->name;
-                $product_sold['recived_offer'] = $recived_offer;
-                $product_sold['sold_offer'] = $sold_offer;
-                $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $product_id)->get();
-                foreach($image as $img){
-                    $name=$img->image_path;
-                    $url =  url('/').'/images/productmedia/'.$name;
-                    $img->image_path =str_replace("server.php","public",$url);
-                }
-                $images = (array)  $image->toArray();
-                $product_sold['images'] = $images;
-                $sold[] = $product_sold;   
             }
-            
-            $allProducts['in_progess']  = $in_progess;  
+            $allProducts['in_progess']  = $in_progress;  
             $allProducts['sold']  = $sold;  
             $allProducts['active']  = $active;   
                 
@@ -346,9 +350,12 @@ class ProductController extends Controller
     
     public function productView($id, Request $request){
         
-        $product = Product::select( 'id','user_id','product_name','total_users','product_created_date','website','price','negotiate','description')->where('id', '=', $id)->first();
+        $product = Product::select( 'id','user_id','product_name','product_type as type','total_users','product_created_date','website','price','negotiate','description','updated_at as updated_date')->where('id', '=', $id)->first();
         $product= (array) $product->toArray();
-           
+
+        $productType=$product['type'];
+        $product_type = ProductType::select('type')->where('id','=',$productType)->first();  
+        $product['type']=$product_type->type;
         $total_listings=DB::table('products')->where('user_id', '=', $product['user_id'])->count();
         $sold_listings=DB::table('products')->where('user_id', '=', $product['user_id'])->whereIn('status', [3,4])->count();
         $seller = DB::table('users as t1')->select('t1.id as id','t1.image_path as image','t2.name as country', 't1.name  as name', 't1.created_at as created_date')
@@ -401,12 +408,11 @@ class ProductController extends Controller
         foreach($product_image as $img){
             $imageName=$img->image_path;
             if($imageName){
-                /*$tempProductImage =TempProductImage::where('image_path','=',$imageName)->get();
-                if($tempProductImage){
-                    $tempProductImage->delete();
-                }*/
-                $destinationPath = public_path('/images/productmedia/');
-                unlink($destinationPath.$imageName);
+                $destination = public_path('/images/productmedia/');
+                $destinationPath =str_replace("laravelcode/public/","",$destination);
+                if (file_exists($destinationPath.$imageName)) {
+                    unlink($destinationPath.$imageName);
+                 }
             }
             $img->delete();
         }
