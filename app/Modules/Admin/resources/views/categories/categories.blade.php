@@ -41,14 +41,15 @@
                           <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
                             
                         </div>
-
                         <div class="actions">
-                            <form action="{{url('admin/Categories')}}" method="get" class="search">
+                            <form action="{{url('admin/categories')}}" method="get" class="search">
                                 {{ csrf_field() }}
-                                <input id='search-category' type="text" class="form-control" name="category" placeholder="Category Name..." required>
+                                <input id='search-category' type="text" class="form-control" name="category" placeholder="Name..." required>
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
+
+
                     </div>
                     <!-- Records Header End -->
                 </div>
@@ -82,6 +83,8 @@
                                 <tr>
                                     <th>S.No</th>
                                     <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Created</th>
                                     <th class="not-sortable">Actions</th>
                                 </tr>
                             </thead>
@@ -93,7 +96,19 @@
                                     <td>{{$i}}</td>
                                     <td>
                                         <a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link">{{$category->category_name}}</a>
-                                    </td>                       
+                                    </td> 
+                                    @php
+                                    $status=array('0'=>'Deactivate','1'=>'Activate');
+                                    @endphp
+                                    <td>
+                                        @foreach($status as $s => $s_value)
+                                           @if($category->status==$s)
+                                                <a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link"><span class="label label-success">{{$s_value}}</span></a>
+                                            @endif
+                                        @endforeach 
+                                    </td>
+
+                                    <td><a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link">{{date('d M,Y ',strtotime($category->created_at))}}</a></td>               
                                     <td>
                                         <div class="dropleft">
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>

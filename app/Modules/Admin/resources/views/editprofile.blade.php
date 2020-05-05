@@ -40,6 +40,22 @@
                                 @endif
                                 <form id="profile-admin-edit" action="{{ url('admin/update') }}/{{ $admin->id }}" method="post">
                                     {{ csrf_field() }}
+
+                                    <!-- <div class="form-group drop-custum focused">
+                                       <div class="mb-4">
+                                        
+                                         <img src="{{ asset('admin/images/userImage')}}"
+                                         class="rounded-circle z-depth-1-half avatar-pic" alt="example placeholder avatar">
+                                        </div>
+                                        <span id="image_name"></span>
+                                        <div class="form-group row">
+                                            <span class="label-text col-md-3 col-form-label">Upload Image :</span>
+                                            <div class="btn btn-mdb-color btn-rounded float-left">
+                                               <input type="file" id="select_image" name="image" accept="image/*">
+                                            </div>
+                                        </div>
+                                    </div> -->
+
                                    
                                     <div class="form-group row">
                                         <span class="label-text col-md-3 col-form-label">Email: *</span>

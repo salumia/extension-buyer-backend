@@ -12,8 +12,9 @@ use App\Modules\Product\Models\Categorie as Category;
 use App\Modules\Product\Models\Product_type as ProductType;
 use App\Modules\Product\Models\Product_image as ProductImage;
 use App\Modules\Product\Models\Temp_product_image as TempProductImage;
+use App\Modules\Product\Models\Userbase as Userbase;
 use App\User as User;
-
+use App\Offer as Offer;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -83,10 +84,12 @@ class ProductController extends Controller
             'product_name'=>'required',
             'price'=>'required',
             'description'=>'required',
-            //'currency'=>'required',
+            'currency'=>'required',
             "total_users"=> "required|min:0",
-            "publish_date"=> "required|date|date_format:Y-m-d",
-            "negotiate"=> "required|min:0|max:1",
+            "publish_date"=> "required|date_format:d/m/Y",
+            //"negotiate"=> "required|min:0|max:1",
+            //"country_id"=>"required",
+            //"users"=>"required",
             "website"=> "required|url"
             //:
         ]);
@@ -96,7 +99,20 @@ class ProductController extends Controller
         }
         
         
-        $catIds = join(",",$postbody['cat_id']);
+        $cat_id=$request->cat_id;
+        if(is_array($cat_id)){
+           if(count($cat_id)>0){
+               array_walk($cat_id, function (&$value, $key) {
+                   $value="#$value#";
+                });
+                $catIds = join(",",$cat_id);
+           }
+           
+        }else{
+           $error = array('cat_id'=>["invalide formate."]);
+            return response()->json(['error'=>$error], 200);
+        }
+      
         
         $userId = auth()->user()->id;
         $postbody = (object) $postbody;
@@ -113,20 +129,35 @@ class ProductController extends Controller
         $product->price = $postbody->price;
         $product->service_fee =  20; //$postbody->service_fee;
         $product->visibilty = 0;
-        $product->negotiate = $postbody->negotiate;
+        $product->negotiate = 0;
         $product->is_sold = 0;
         $product->currency = $request->currency;
         $product->website = $postbody->website;
-
         $product->save();
         $product_id=$product->id;
+        
+        $userbase=$request->userbase;
+        if($userbase){
+            foreach($userbase as $user){
+                $country_id= $user['country_id'];
+                $user= $user['user'];
+                
+                $userbase= new Userbase;
+                $userbase->country_id=$country_id;
+                $userbase->product_id=$product_id;
+                $userbase->users=$user;
+                $userbase->save();
+            }
+        }
+        
+        
         if(isset($postbody->product_image_ids)){
             //dd($postbody->product_image_ids);
             foreach($postbody->product_image_ids as $value){
                 $value = (int) $value;
                 $TempProductImage = TempProductImage::find($value);
-                $ProductImage = new ProductImage;
                 
+                $ProductImage = new ProductImage;
                 $ProductImage->product_id = $product_id;
                 $ProductImage->image_path = $TempProductImage->image_path;
                 $ProductImage->type =  $TempProductImage->type;
@@ -159,8 +190,10 @@ class ProductController extends Controller
                 $destinationPath = public_path('/images/productmedia');
                 $image->move($destinationPath, $name);
                 $imagePath = $name;
+
+                $url =  url('/').'/images/productmedia/'.$name;
+                $complete_path[] =str_replace("server.php","public",$url);
                 
-                $complete_path[]='trigvent.com/sell-admin/public/images/productmedia/'.$name;
                 $postbody = (object) $postbody;
                 $ProductImage = new TempProductImage();
                 $ProductImage->type = $type;
@@ -168,6 +201,8 @@ class ProductController extends Controller
                 $ProductImage->save();
                 $type =$ProductImage->type;
                 $ids[]=$ProductImage->id;
+                
+                
             }
 
         } 
@@ -188,15 +223,244 @@ class ProductController extends Controller
             }
             
             $userId = auth()->user()->id;
-
-            $product = DB::table('products')
-            ->leftJoin('product_images', 'products.id', '=', 'product_images.product_id')
-            ->select('products.id', 'products.cat_id', 'products.user_id', 'products.product_name','products.total_users', 'products.price', 'products.product_created_date', 'product_images.product_id', 'product_images.image_path', 'product_images.type')
-            ->where('products.user_id', '=', $userId)
-            ->get();
             
-            $response = array('status'=> 200, 'message'=>"all product list.",'productListing'=>$product);
+            $active = array();
+            $products=DB::table('products')->select( 'id','product_name as name','product_type as type','status')->where('user_id', '=', $userId)->whereIn('status', [0, 1, 5])->get();
+            
+            $products1 = (array) $products->toArray();
+            foreach($products1 as $key => $product){
+                $product = (array) $product;
+                $productType=$product['type'];
+                $product_id=$product['id'];
+                
+                $product_type = ProductType::select('type')->where('id','=',$productType)->first();
+                $product['type']=$product_type->type;
+                
+                $received_offer=DB::table('products')->where('user_id', '=', $userId)->count();
+                
+                $total_offer=DB::table('offers')->where('product_id', '=', $product_id)->count();
+                $total_amount = 0;
+                if($total_offer != 0){
+                    $total_amount=DB::table('offers')->where('product_id', '=', $product_id)->sum('offered_amount');
+                    $total_amount = $total_amount/$total_offer;
+                    
+                }
+                 $product['received_offer'] = $received_offer;
+                 $product['avg_offers'] = $total_amount;
+                
+                $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $product_id)->get();
+                foreach($image as $img){
+                    $name=$img->image_path;
+                    $url =  url('/').'/images/productmedia/'.$name;
+                    $img->image_path =str_replace("server.php","public",$url);
+                }
+                $images = (array)  $image->toArray();
+                $product['images'] = $images;
+                $active[] = $product;
+            }
+            
+/*----------------------status-Progress----------------------------------------*/
+
+            $in_progress=array();
+            $products2=DB::table('products')->select( 'id','product_name as name','product_type as type','status')->where('user_id', '=', $userId)->where('status', '=',2)->get();
+            $product_in = (array) $products2->toArray();
+            
+            $buyerName=DB::table('users')->select('name')->where('id','=',$userId)->first();
+            $recived_offer=DB::table('products')->where('user_id', '=', $userId)->count();
+            $sold_offer=DB::table('products')->where('user_id', '=', $userId)->where('status', '=',2)->count();
+             
+             foreach ($product_in as $key => $product) {
+                $product_in = (array) $product;
+                $product_id=$product_in['id'];
+                $productType=$product_in['type'];
+                
+                $product_type = ProductType::select('type')->where('id','=',$productType)->first();
+                $product_in['type']=$product_type->type;
+                
+                $offers=DB::table('offers')->select('buyer_id')->where('product_id','=',$product_id)->get();
+                foreach($offers as $offer){
+                    $offers = (array) $offer;
+                    $buyer_id=$offers['buyer_id'];
+                }
+                
+                $product_in['buyer_id']=$buyer_id;
+                
+                $product_in['buyer_name']=$buyerName->name;
+                $product_in['received_offers'] = $recived_offer;
+                $product_in['sold_amount'] = $sold_offer;
+                $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $product_id)->get();
+                foreach($image as $img){
+                    $name=$img->image_path;
+                    $url =  url('/').'/images/productmedia/'.$name;
+                    $img->image_path =str_replace("server.php","public",$url);
+                }
+                $images = (array)  $image->toArray();
+                $product_in['images'] = $images;
+                $in_progess[] = $product_in;      
+             }
+ /*------------------------------status-sold--------------------------------------------*/
+            $sold=array();
+            $products3=DB::table('products')->select( 'id','product_name as name','product_type as type','status')->where('user_id', '=', $userId)->whereIn('status', [3,4])->get();
+            $product_sold = (array) $products3->toArray(); 
+            
+            $buyerName=DB::table('users')->select('name')->where('id','=',$userId)->first(); 
+            $recived_offer=DB::table('products')->where('user_id', '=', $userId)->count();
+            $sold_offer=DB::table('products')->where('user_id', '=', $userId)->where('status', '=',3 or 'status','=',4)->count();
+            
+             foreach ($product_sold as $key => $product) {
+                $product_sold = (array) $product;
+                $product_id=$product_sold['id'];
+                
+                $productType=$product_sold['type'];
+                $product_type = ProductType::select('type')->where('id','=',$productType)->first();
+                $product_sold['type']=$product_type->type;
+                
+                $offers=DB::table('offers')->select('buyer_id')->where('product_id','=',$product_id)->get();
+                foreach($offers as $offer){
+                    $offers = (array) $offer;
+                    $buyer_id=$offers['buyer_id'];
+                }
+                $product_sold['buyer_id']=$buyer_id;
+                $product_sold['buyer_name']=$buyerName->name;
+                $product_sold['recived_offer'] = $recived_offer;
+                $product_sold['sold_offer'] = $sold_offer;
+                $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $product_id)->get();
+                foreach($image as $img){
+                    $name=$img->image_path;
+                    $url =  url('/').'/images/productmedia/'.$name;
+                    $img->image_path =str_replace("server.php","public",$url);
+                }
+                $images = (array)  $image->toArray();
+                $product_sold['images'] = $images;
+                $sold[] = $product_sold;   
+            }
+            
+            $allProducts['in_progess']  = $in_progess;  
+            $allProducts['sold']  = $sold;  
+            $allProducts['active']  = $active;   
+                
+            $response = array('status'=> 200, 'message'=>"all product list.",'productListing'=>$allProducts);
             return response()->json($response); 
     }
+    
+    
+    public function productView($id, Request $request){
+        
+        $product = Product::select( 'id','user_id','product_name','total_users','product_created_date','website','price','negotiate','description')->where('id', '=', $id)->first();
+        $product= (array) $product->toArray();
+           
+        $total_listings=DB::table('products')->where('user_id', '=', $product['user_id'])->count();
+        $sold_listings=DB::table('products')->where('user_id', '=', $product['user_id'])->whereIn('status', [3,4])->count();
+        $seller = DB::table('users as t1')->select('t1.id as id','t1.image_path as image','t2.name as country', 't1.name  as name', 't1.created_at as created_date')
+            ->leftJoin('countries as t2', 't1.country_id', '=', 't2.id')->where('t1.id','=', $product['user_id'])
+            ->first();
+            $seller = (array) $seller;
+            
+        $name=$seller['image'];
+        $url = url('/').'/images/upload/'.$name;
+        $seller['image']=str_replace("server.php","public",$url);;
+        $seller['total_listings'] = $total_listings;
+        $seller['sold_listings'] = $sold_listings;
+         
+        $userBases = DB::table('userbases')->select('users','name as country_name')
+            ->leftJoin('countries', 'userbases.country_id', '=', 'countries.id')
+            ->get();
+            
+        $bannerImages=DB::table('product_images')->select( 'id','image_path')->where('product_id', '=', $id)->where('type', '=', 'banner')->get();
+            foreach($bannerImages as $img){
+                $name=$img->image_path;
+                $url =  url('/').'/images/productmedia/'.$name;
+                $img->image_path =str_replace("server.php","public",$url);
+            }
+                
+        $statImages=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $id)->where('type', '=', 'stats')->get();
+            foreach($statImages as $img){
+                $name=$img->image_path;
+                $url =  url('/').'/images/productmedia/'.$name;
+                $img->image_path =str_replace("server.php","public",$url);
+            }
+               
+        $bannerImages = (array) $bannerImages->toArray(); 
+        $statImages = (array) $statImages->toArray(); 
+        $product['seller'] = $seller; 
+        $product['userbase'] = $userBases;
+        $product['banners']=$bannerImages;
+        $product['statistics']=$statImages;
+
+        unset($product['user_id']);
+        
+        $response = array('status'=> 200, 'message'=>"Product Details.",'product'=>$product);
+        return response()->json($response);
+        
+    }
+    
+    
+    public function productDelete($id,Request $request){
+        
+        $product_image=ProductImage::where('product_id','=',$id)->get();
+        foreach($product_image as $img){
+            $imageName=$img->image_path;
+            if($imageName){
+                /*$tempProductImage =TempProductImage::where('image_path','=',$imageName)->get();
+                if($tempProductImage){
+                    $tempProductImage->delete();
+                }*/
+                $destinationPath = public_path('/images/productmedia/');
+                unlink($destinationPath.$imageName);
+            }
+            $img->delete();
+        }
+        
+        $product=Product::find($id);
+        $product->delete();
+        $response = array('status'=> 200, 'message'=>"Product Delete Successfully.");
+        return response()->json($response);
+        
+    }
+    
+    public function productUpdate($id,Request $request){
+        $validator = Validator::make($request->all(), [ 
+            'product_name' => 'required',
+            'total_users' => 'required',
+            'product_created_date' => 'required|date_format:d/m/Y',
+            'website' => 'required',
+            'price' => 'required|max:20',
+            'negotiate' =>'required|max:20',
+            'description' => 'required|max:20'
+        ]);
+        if ($validator->fails()) { 
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
+   
+        $product=Product::find($id);
+        $product->product_name=$request->product_name;
+        $product->total_users=$request->total_users;
+        $product->product_created_date=$request->product_created_date;
+        $product->website=$request->website;
+        $product->price=$request->price;
+        $product->negotiate=$request->negotiate;
+        $product->description=$request->description;
+        $product->update();
+        /*if($product->update){
+            $uploadimage=$request->file('uploadimage');
+            if(count($uploadimage)>0){
+                foreach($uploadimage as $image){
+                    $path = $image->getClientOriginalName();
+                    $random=rand(1,100);
+                    $name = time().'-'.$random.'-'.$image->getClientOriginalExtension();
+                    $destinationPath = public_path('/images/productmedia');
+                    $image->move($destinationPath, $name);
+                    $imagePath = $name;
+                }
+                
+            }
+        }*/
+        
+        $response = array('status'=> 200, 'message'=>"Product updated Successfully.");
+        return response()->json($response);
+        
+        
+    }
+    
     
 }

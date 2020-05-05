@@ -54,7 +54,7 @@ class AdminController extends Controller
     }
     public function updateProfile($id, Request $request)
     {
-    
+        dd($request->all());
         $email = $request->input('email');
 
         $already = Admin::where('id','!=',$id)->where('email',$email)->get()->count();

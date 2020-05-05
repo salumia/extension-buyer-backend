@@ -62,18 +62,18 @@
                         </a>
 
                         <ul>
-                            <li><a href="{{ url('admin/user') }}">Listing</a></li>
+                            <li><a href="{{ url('admin/user') }}">Users</a></li>
                             <li><a href="{{ url('admin/user/create') }}">Add User</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="#">
-                            <i class="fa fa-shopping-cart"></i>
+                            <i class="fa fa-th-list"></i>
                             <span>Manage Category</span>
                         </a>
 
                         <ul>
-                            <li><a href="{{ url('admin/categories') }}">Listing</a></li>
+                            <li><a href="{{ url('admin/categories') }}">Categories</a></li>
                             <li><a href="{{ url('admin/categories/create') }}">Add Category</a></li>
                         </ul>
                     </li>
