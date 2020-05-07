@@ -23,7 +23,7 @@ Route::get('/login', 'Auth\LoginController@showLoginForm')->name('admin.login');
 Route::post('/login', 'Auth\LoginController@login');
 Route::resource('/user','UserController');
 Route::resource('/categories','CategoryController');
-
+Route::resource('/product','ProductListingController');
 
 /*Route::post('admin/logout', 'Auth\LoginController@logout');
 //Auth::routes();

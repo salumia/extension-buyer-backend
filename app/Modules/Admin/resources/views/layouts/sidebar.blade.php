@@ -77,6 +77,18 @@
                             <li><a href="{{ url('admin/categories/create') }}">Add Category</a></li>
                         </ul>
                     </li>
+
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-th"></i>
+                            <span>Manage Product</span>
+                        </a>
+
+                        <ul>
+                            <li><a href="{{ url('admin/product') }}">Listing</a></li>
+                            <!-- <li><a href="{{ url('admin/categories/create') }}">Add Category</a></li> -->
+                        </ul>
+                    </li>
                 </ul>
             </li>
 

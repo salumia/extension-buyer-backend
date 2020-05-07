@@ -374,13 +374,16 @@ class ProductController extends Controller
             ->get();
             
         $bannerImages=DB::table('product_images')->select( 'id','image_path')->where('product_id', '=', $id)->where('type', '=', 'banner')->get();
+        
             foreach($bannerImages as $img){
                 $name=$img->image_path;
                 $url =  url('/').'/images/productmedia/'.$name;
                 $img->image_path =str_replace("server.php","public",$url);
             }
+            
                 
         $statImages=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $id)->where('type', '=', 'stats')->get();
+        
             foreach($statImages as $img){
                 $name=$img->image_path;
                 $url =  url('/').'/images/productmedia/'.$name;
@@ -393,7 +396,6 @@ class ProductController extends Controller
         $product['userbase'] = $userBases;
         $product['banners']=$bannerImages;
         $product['statistics']=$statImages;
-
         unset($product['user_id']);
         
         $response = array('status'=> 200, 'message'=>"Product Details.",'product'=>$product);
@@ -424,29 +426,123 @@ class ProductController extends Controller
         
     }
     
-    public function productUpdate($id,Request $request){
+    public function getProductRawDetails($id,Request $request){
+        
+        $product = Product::select( 'id as product_id','user_id','product_name','product_type','cat_id as category','total_users','currency','product_created_date as publish_date','website','price','negotiate','description')->where('id', '=', $id)->first();
+        $product= (array) $product->toArray();
+        $productId=$product['product_id'];
+        $category=$product['category'];
+        $date = $product['publish_date'];
+        $date=date_create($date);
+        $product['publish_date']=date_format($date,"D M Y H:i:s");
+        
+        //$cateStr=str_replace(","," ",$category);
+        $cateString=str_replace("#","",$category);
+        $cateId=explode(",",$cateString);
+        foreach($cateId as $key=>$value){
+           $cateId[$key]=(int)$value;
+        }
+        $product['category']=$cateId;
+        $userbase=DB::table('userbases')->select('id','country_id','users')->where('product_id','=',$productId)->get();
+        $userBase = (array) $userbase->toArray(); 
+        $product['userbase'] = $userBase;
+        
+        $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $productId)->get();
+            foreach($image as $img){
+                $name=$img->image_path;
+                $url =  url('/').'/images/productmedia/'.$name;
+                $img->image_path =str_replace("server.php","public",$url);
+            }
+        $images = (array)  $image->toArray();
+        $product['images'] = $images;
+        $response = array('status'=> 200, 'message'=>"Product Edit Details.",'product'=>$product);
+        return response()->json($response);
+        
+    }
+    
+    public function updateProductRawDetails($id,Request $request){
+        
+        try {
+                $user = auth()->userOrFail();
+            } catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) {
+                // do something
+                
+                $error = $e->getMessage(); 
+                return response()->json(['error' =>$e->getMessage()], 401);
+            
+            }
+        
         $validator = Validator::make($request->all(), [ 
+            'cat_id' => 'required',
+            'product_type_id' => 'required|min:1',
             'product_name' => 'required',
             'total_users' => 'required',
-            'product_created_date' => 'required|date_format:d/m/Y',
-            'website' => 'required',
+            'publish_date' => 'required|date_format:d/m/Y',
+            'website' => 'required|url',
+            'currency'=>'required',
             'price' => 'required|max:20',
             'negotiate' =>'required|max:20',
+            'visibilty' =>'required',
+            'status'=>'required',
             'description' => 'required|max:20'
         ]);
         if ($validator->fails()) { 
                 return response()->json(['error'=>$validator->errors()], 401);            
         }
-   
+        
+        $userId = auth()->user()->id;
+        
+        $cat_id=$request->cat_id;
+        if(is_array($cat_id)){
+           if(count($cat_id)>0){
+               array_walk($cat_id, function (&$value, $key) {
+                   $value="#$value#";
+                });
+                $catIds = join(",",$cat_id);
+           }
+           
+        }
+        
         $product=Product::find($id);
         $product->product_name=$request->product_name;
+        $product->product_type= $request->product_type_id;
+        $product->user_id = $userId;
+        $product->cat_id = $catIds;
         $product->total_users=$request->total_users;
-        $product->product_created_date=$request->product_created_date;
+        $product->visibilty = $request->visibilty;
+        $product->product_created_date=$request->publish_date;
         $product->website=$request->website;
+        $product->currency = $request->currency;
         $product->price=$request->price;
         $product->negotiate=$request->negotiate;
         $product->description=$request->description;
+        $product->status = $request->status;
+        /*$product->service_fee =  20;
+        $product->is_sold = 0;*/
         $product->update();
+        $userbase=$request->userbase;
+        
+        $userbase_data=Userbase::where('product_id','=',$id)->get();
+        foreach ($userbase_data as $data){
+            $data->delete();
+        }
+        if($userbase){
+            
+            foreach($userbase as $user){
+                if($user){
+                    $country_id= $user['country_id'];
+                    $user= $user['users'];
+                    $userbase= new Userbase;
+                    $userbase->country_id=$country_id;
+                    $userbase->product_id=$id;
+                    $userbase->users=$user;
+                    $userbase->save();
+                }
+            }
+        }
+        
+        
+        
         /*if($product->update){
             $uploadimage=$request->file('uploadimage');
             if(count($uploadimage)>0){
@@ -467,6 +563,8 @@ class ProductController extends Controller
         
         
     }
+    
+    
     
     
 }
