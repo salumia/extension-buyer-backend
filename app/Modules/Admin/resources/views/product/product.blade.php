@@ -128,7 +128,7 @@
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
 
                                             <div class="dropdown-menu">
-                                                <a href="{{url('admin/product/'.$product['id'].'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
+                                                <a href="{{url('admin/product/'.$product['id'].'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
 
                                                 <form style="margin-left: 24px;" action="{{url('admin/product/'.$product['id'])}}" method="post">
                                                 {!! csrf_field() !!} 

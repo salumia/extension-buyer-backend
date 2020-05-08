@@ -24,7 +24,7 @@
 
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="{{ url('admin/product') }}">Products</a></li>
-                                <li class="breadcrumb-item active"><span>Edit Product</span></li>
+                                <li class="breadcrumb-item active"><span>View Product</span></li>
                             </ul>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                     <!-- Edit Product Start -->
                     <div class="records--body">
                         <div class="title">
-                            <h6 class="h6">Edit Product</h6>
+                            <h6 class="h6">View Product</h6>
                         </div>
 
                         <!-- Tab Content Start -->
@@ -68,17 +68,29 @@
                                 @endif
                                 
   
-                                <form id="edit-category-form" action="{{ url('admin/product/'.$product->id) }}" method="post">
+                                <form id="edit-category-form" action="{{ url('admin/product/'.$product['details']->id) }}" method="post">
                                     {{ csrf_field() }}
                                     
                                     {{Method_field('PUT')}}
                                     
-                                    <!-- <div class="form-group row">
-                                        <span class="label-text col-md-3 col-form-label">Category Name*: </span>
+                                    <div class="form-group row">
+                                        <span class="label-text col-md-3 col-form-label">Name </span>
                                         <div class="col-md-9">
-                                            <input type="text" value=""  name="categoryName" class="form-control">
+                                            <input type="text" readonly value="{{$product['details']->product_name}}"  name="name" class="form-control">
                                         </div>
-                                    </div> -->
+                                    </div>
+                                    <div class="form-group row">
+                                        <span class="label-text col-md-3 col-form-label">Type </span>
+                                        <div class="col-md-9">
+                                            <input type="text" readonly value="{{$product['type']->type}}"  name="type" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <span class="label-text col-md-3 col-form-label">Seller </span>
+                                        <div class="col-md-9">
+                                            <input type="text" readonly value="{{$product['seller']->name}}"  name="seller" class="form-control">
+                                        </div>
+                                    </div>
 
                                     @php
                                         $status=array('0'=>'Under review ', '4'=>'Completed','5'=>'rejected');
@@ -89,7 +101,7 @@
                                             <select name="status" class="form-control" required>
                                                 <option value="">Please Select Status</option>
                                                   @foreach($status as $s => $s_value)
-                                                  <option value="{{$s}}"@if($product->status==$s){{'selected'}}@endif>{{$s_value}}</option>
+                                                  <option value="{{$s}}"@if($product['details']->status==$s){{'selected'}}@endif>{{$s_value}}</option>
                                                  @endforeach 
                                             </select>
                                         </div>

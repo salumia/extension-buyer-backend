@@ -84,7 +84,12 @@ class ProductListingController extends Controller
      */
     public function edit($id)
     {
-        $product=Product::find($id);
+        $product = array();
+        $details=Product::find($id);
+        $product['details']=$details;
+        $product['type']=$details->getProductType;
+        $product['seller']=$details->getUser;
+        
         return view('Admin::product.edit_product',compact('product'));
     }
 
@@ -97,7 +102,17 @@ class ProductListingController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
+        $validator = Validator::make($request->all(), [ 
+            'status' => 'required',
+        ]);
+        if ($validator->fails()) { 
+            return response()->json(['error'=>$validator->errors()], 200);            
+        }
+        $product= Product::find($id);
+        $product->status=$request->status;
+        $product->Update();
+        return redirect('/admin/product')->with('success','Status Updated Successfully.');
     }
 
     /**
