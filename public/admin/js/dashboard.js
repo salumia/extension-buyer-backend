@@ -283,6 +283,35 @@ $("#profile-admin-edit").validate({
         }
     });
 
+	$('.extensionId').on('change',function(){
+		 //var status =$(this).("option:selected" )[0].getAttribute("value")
+		var status =$( "option:selected",this ).val()
+		alert(status);
+		var extensionId =$(this).attr('extension_id');
+		$.ajax({
+            type: 'POST',
+            url: apiBaseUrl+'/extensionStatus/'+extensionId,
+            data: {status:status},
+            dataType: 'json',
+            success: function(response){
+                console.log(response);
+                if(response.status==200){
+                	alert('here');
+	                  $('.alert-success').find('p').text(response.message);
+	               
+	               setTimeout(function(){
+                        location.reload();
+                    }, 1000);
+                	
+                }else{
+                	$('.alert alert-danger').text(response.message);
+                }
+            },error: function(jqXHR, textStatus) {
+               console.warn(textStatus);
+            },
+        });
+	});
+
 
 $('#addListing_form').validate({
         rules: {
