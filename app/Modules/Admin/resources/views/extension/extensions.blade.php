@@ -38,13 +38,13 @@
                     <div class="records--header">
                         
                         <div class="title">
-                          <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
-                            
+                        <!--  <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
+                         -->   
                         </div>
                         <div class="actions">
                             <form action="{{url('admin/extension')}}" method="get" class="search">
                                 {{ csrf_field() }}
-                                <input id='search-extension' type="text" class="form-control" name="extension" placeholder="extension..." required>
+                                <input id='search-extension' type="text" class="form-control" name="extension" placeholder="Extension..." required>
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
@@ -76,6 +76,7 @@
                             
                         </div>
                     @endif
+                    
                     <!-- Records List Start -->
                     <div class="records--list" data-title="Extension Listing">
                         <table id="recordsListView">
@@ -108,28 +109,31 @@
                                     </td>
                                     
                                     @php
-                                    $status=array('0'=>'Under review ','4'=>'Completed','5'=>'rejected');
+                                    $visibility=array('1'=>'Public','0'=>'Private');
+                                    $status=array('0'=>'Under Review ','1'=>'Approve','5'=>'Reject');
 
-                                    $CompleteStatus=array('0'=>'Under review ','1'=>' verified and public available','2'=>'Deal in progress','3'=>'sold','4'=>'Completed','5'=>'rejected');
+                                    $CompleteStatus=array('0'=>'Under Review ','1'=>' Approve','2'=>'Deal in Progress','3'=>'Sold','4'=>'Complete','5'=>'Reject');
                                     @endphp
                                     
-                                    <td>
+                                    <td >
+
+
                                         @if($extension['status']==0)
-                                        <select name="status" extension_id="{{$extension['id']}}" class="form-control extensionId" required>
-                    
-                                                  @foreach($status as $s => $s_value)
-                                                  <option value="{{$s}}"@if($extension['status']==$s){{'selected'}}@endif>{{$s_value}}</option>
-                                                 @endforeach 
-                                            </select>
+                                        <div class="getLoder"></div>
+                                        <select name="status" extension_id="{{$extension['id']}}" class="form-control extensionId" id="extensionId" required>
+                                              @foreach($status as $s => $s_value)
+                                              <option value="{{$s}}"@if($extension['status']==$s){{'selected'}}@endif>{{$s_value}}</option>
+                                             @endforeach 
+                                        </select>
                                         @else    
                                             @foreach($CompleteStatus as $s => $s_value)
                                                @if($extension['status']==$s)
-                                                    <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{$s_value}}</a>
+                                                    
+                                                    <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link" style="margin-left: 23px;">{{$s_value}}</a>
                                                 @endif
                                             @endforeach 
                                         @endif
                                     </td>
-                                    
                                     <td>
                                         <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['received_offer']}}</a>
                                     </td>
@@ -141,12 +145,6 @@
 
                                             <div class="dropdown-menu">
                                                 <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
-
-                                                <!-- <form style="margin-left: 24px;" action="{{url('admin/extension/'.$extension['id'])}}" method="post">
-                                                {!! csrf_field() !!} 
-                                                {{Method_field('DELETE')}}
-                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this Product')" >Delete</button>
-                                                </form> -->
                                             </div>
                                         </div>
                                     </td>
@@ -160,9 +158,36 @@
                     <!-- Records List End -->
                 </div>
             </section>
+            
+            
+        <!-- Basic Modal Start -->
+        <div id="basicModal" class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Give Reason for Reject</h5>
+                    <button type="button" class="close model_close" data-dismiss="modal">&times;</button>
+                </div>
+                <form id="rejectStatus-form" name="rejectStatus-form">
+                    
+                    <div class="modal-body">
+                        <input type="hidden" id="extId" name="extId" value="">
+                        <input type="text" id="reject_reason"  name="reject_reason" style="width:100%; height: 147px;">
+                    </div>
+                    <div class="msg"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default model_close" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success" id="save_reason" >Save</button>
+                    </div>
+                </from>    
+            </div>
+        </div>
+    </div>
+    <!-- Basic Modal End -->
             <!-- Main Content End -->
     <!-- footer -->
        @include('Admin::layouts.main_footer')
+       
      <!-- end footer -->
       <!-- Scripts -->
        @include('Admin::layouts.footer')

@@ -82,8 +82,9 @@
                                         <div class="col-md-9">
                                             <select name="status" id="status" class="form-control">
                                                 <option value="">Please Select Status</option>
-                                                  <option value="0">Deactivate</option>
-                                                  <option value="1">Activate</option>
+                                                   <option value="1">Enable</option>     
+                                                   <option value="0">Disable</option>
+                                                  
                                             </select>
                                         </div>
                                     </div>

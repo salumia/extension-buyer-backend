@@ -84,6 +84,18 @@
                                                     <td>Website:</td>
                                                     <th>{{$product['website']}}</th>
                                                 </tr>
+                                                <tr>
+                                                    <td>Categories:</td>
+                                                    <th>{{$product['categories']}}</th>
+                                                </tr> 
+                                                <tr>
+                                                    <td>Visibility:</td>
+                                                    @if($product['visibilty']==1)
+                                                    <th>Public</th>
+                                                    @else
+                                                    <th>Private</th>
+                                                    @endif
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -107,6 +119,12 @@
                                                         <th>No</th>
                                                     @endif       
                                                 </tr>
+                                                <tr>
+                                                    <td>Type:</td>
+                                                    <th>{{$product['type']}}</th>
+                                                </tr>
+                                                
+                                                
                                                 
                                             </tbody>
                                         </table>
@@ -143,6 +161,21 @@
                             
                         </div>
                         <!-- Tab Content End -->
+                        <br>
+                        <!-- Tab Content Start -->
+                        <div class="tab-content">
+                            <!-- Tab Pane Start -->
+                            <div class="tab-pane fade show active" id="tab01">
+                                    <h4 class="subtitle">Description</h4>
+                                <div class="row" >
+                                    <textarea id="w3mission" rows="5" cols="140" readonly>{{$product['description']}}</textarea>
+                                </div>
+
+                            </div>
+                            <!-- Tab Pane End -->
+                        </div>
+                        
+                        
                         <br>
                         <!-- Tab Content Start -->
                         <div class="tab-content">
@@ -224,17 +257,13 @@
                                             <tbody>
                                                 <tr>
                                                     <td>Name:</td>
-                                                    <th>{{$product['seller']['name']}}</th>
+                                                    <th><a href="{{url('admin/user/'.$product['user_id'])}}" class="btn-link">{{$product['seller']['name']}}</a></th>
                                                 </tr>
                                                 <tr>
                                                     <td>Location:</td>
                                                     <th>{{$product['seller']['country']}}</th>
                                                 </tr>
-                                                <tr>
-                                                    <td>Member Since:</td>
-                                                    <th>{{date('d M,Y ',strtotime($product['seller']['created_date']))}}</th>
-
-                                                </tr>
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -251,11 +280,7 @@
                                                     <td>Listings Sold:</td>
                                                     <th>{{$product['seller']['sold_listings']}}</th>
                                                 </tr>
-                                                <!-- <tr>
-                                                    <td>Extension Verified:</td>
-                                                    <th>June 16, 2017</th>
-                                                </tr> -->
-                                                
+                                                 
                                             </tbody>
                                         </table>
                                     </div>

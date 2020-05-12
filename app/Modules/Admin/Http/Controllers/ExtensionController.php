@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User as User;
 use App\Modules\Admin\Models\Category as Category;
 use App\Modules\Product\Models\Product as Product;
+use App\Modules\Admin\Models\Admin as Admin;
 use App\Modules\Product\Models\Product_type as ProductType;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -23,27 +24,40 @@ class ExtensionController extends Controller
      */
     public function index()
     {
-        $extensions=array();
-        $extension=Product::all();
-        $extension = (array) $extension->toArray();
-        foreach ($extension as $ext) {
-             $extension = (array) $ext;
+        if (isset($_GET['extension'])){
+            
+          $extensions = Product::Where('product_name', 'like', '%' . $_GET['extension'] . '%')->orderBy('id', 'DESC')->get();
+        }else{
+            $extensions=array();
+            $extension=Product::all();
+            $extension = (array) $extension->toArray();
+            foreach ($extension as $ext) {
+                $extension = (array) $ext;
                 if($extension){
                     $productType=$extension['product_type'];
+                    $categoryIdString=$extension['cat_id'];
+                    $cateString=str_replace("#","",$categoryIdString);
+                    $cateId=explode(",",$cateString);
+                    foreach($cateId as $value){
+                       $cate[]=(int)$value;
+                    }
+
                     $product_type = ProductType::select('type')->where('id','=',$productType)->first();
                     $extension['type']=$product_type['type'];
-
                     $userId=$extension['user_id'];
                     $received_offer=DB::table('products')->where('user_id', '=', $userId)->count();
                     $extension['received_offer']=$received_offer; 
 
                     $product_seller = User::select('name')->where('id','=',$userId)->first();
                     $extension['seller']=$product_seller['name'];
+                    
                 }
                 $extensions[] = $extension;
-                //dd($extensions);
-            }  
-        return view('Admin::extension.extensions',compact('extensions')); 
+                
+            }
+            //dd($extensions);
+        } 
+        return view('Admin::extension.extensions',compact('extensions'));
     }
 
     /**
@@ -75,9 +89,23 @@ class ExtensionController extends Controller
      */
     public function show($id)
     {
-        $product = Product::select( 'id','user_id','currency','product_name','product_type as type','total_users','product_created_date','website','price','negotiate','description','updated_at as updated_date')->where('id', '=', $id)->first();
+        $product = Product::select( 'id','user_id','currency','product_name','product_type as type','visibilty','total_users','cat_id','product_created_date','website','price','negotiate','description','updated_at as updated_date')->where('id', '=', $id)->first();
         $product= (array) $product->toArray();
-
+        $productCategories=$product['cat_id'];
+        
+        $cateString=str_replace("#","",$productCategories);
+        $cateId=explode(",",$cateString);
+        foreach($cateId as $key=>$value){
+           $cateId[$key]=(int)$value;
+        }
+        $categories=Category::select('category_name')->whereIn('id', $cateId)->get();
+        $categories = (array) $categories->toArray(); 
+        foreach($categories as $category){
+            $category=(array) $category;
+            $cateName[] = $category['category_name'];
+        }
+        $categoriesName=implode(", ",$cateName);
+        
         $productType=$product['type'];
         $product_type = ProductType::select('type')->where('id','=',$productType)->first();  
         $product['type']=$product_type->type;
@@ -102,8 +130,8 @@ class ExtensionController extends Controller
         
             foreach($bannerImages as $img){
                 $name=$img->image_path;
-                $url =  url('/').'/images/productmedia/'.$name;
-                $img->image_path =str_replace("server.php","public",$url);
+                $url =  url('/').'/laravelcode/public/images/productmedia/'.$name;
+                $img->image_path =$url;
             }
             
                 
@@ -111,8 +139,8 @@ class ExtensionController extends Controller
         
             foreach($statImages as $img){
                 $name=$img->image_path;
-                $url =  url('/').'/images/productmedia/'.$name;
-                $img->image_path =str_replace("server.php","public",$url);
+                $url =  url('/').'/laravelcode/public/images/productmedia/'.$name;
+                $img->image_path =$url;
             }
                
         $bannerImages = (array) $bannerImages->toArray(); 
@@ -121,7 +149,8 @@ class ExtensionController extends Controller
         $product['userbase'] = $userBases;
         $product['banners']=$bannerImages;
         $product['statistics']=$statImages;
-        
+        $product['categories']=$categoriesName;
+       // dd($product);
         return view('Admin::extension.view_extension',compact('product'));
     }
 
@@ -167,4 +196,56 @@ class ExtensionController extends Controller
         $response = array('status'=> 200, 'message'=> 'Status Updated Successfully');
        return response()->json($response);
     }
+    
+    
+    
+    Public function extensionStatusReject($id, Request $request){
+        
+        $validator = Validator::make($request->all(), [ 
+            'status' => 'required',
+            'reason' => 'required'
+        ]);
+        
+        if ($validator->fails()) { 
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
+        
+        $product=Product::find($id);
+        $product->status=$request['status'];
+        $product->reject_reason=$request['reason'];
+        $product->update();
+        $response = array('status'=> 200, 'message'=> 'Status Updated Successfully');
+       return response()->json($response);
+
+    }
+    
+    public function validateUserEmailCheck(Request $request)
+      {
+          
+        $email=$request['email'];
+        $already = User::where('email',$email)->get()->count();
+        $admin = Admin::where('email',$email)->get()->count();
+         if($already or $admin){
+          echo json_encode(false);
+         }else{
+          echo json_encode(true);
+         }
+         die;
+      }
+    
+    public function validateAdminEmailCheck(Request $request)
+      {
+        $email=$request['email'];
+        $user =User::where('email',$email)->get()->count();
+        $admin = Admin::where('email',$email)->get()->count();
+         if($admin or $user){
+          echo json_encode(false);
+         }else{
+          echo json_encode(true);
+         }
+         die;
+      }  
+      
+      
+      
 }

@@ -43,13 +43,6 @@ class LoginController extends Controller
         return view("Admin::auth.login");
     }
 
-    public function showLoginFormRedirect()
-    {
-        return view("Admin::auth.login");
-    }
-    
-
-
     public function login(Request $request)
     {
         $this->validateLogin($request);
@@ -84,14 +77,19 @@ class LoginController extends Controller
 
     }
 
-  protected function authenticated(Request $request, Admin $user){
+    protected function authenticated(Request $request, Admin $user){
         $admin = \Auth::guard('admin')->user();
         $adminData['id'] =$admin->id;
         $adminData['name'] = $admin->name;
         $adminData['email'] = $admin->email; 
-        
         session(['adminSessionData' => $adminData]);
         return redirect('admin/dashboard');
+    }
+    
+    public function logout(Request $request)
+    {
+        Auth::guard('admin')->logout();
+        return redirect('admin/login');
     }
 
 

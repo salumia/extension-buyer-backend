@@ -11,7 +11,7 @@
           @include('Admin::layouts.sidebar')
         <!-- Sidebar End -->
 
-      <h2>User profile data</h2>
+      <h2>Admin profile data</h2>
     </div>
     <!-- Wrapper End -->
   <?php

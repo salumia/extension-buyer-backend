@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User as User;
 use App\Modules\Country\Models\Country as Country;
+use App\Modules\Product\Models\Product as Product;
+use App\Modules\Product\Models\Product_type as ProductType;
 use App\Modules\State\Models\State as State;
 use App\Modules\City\Models\City as City;
 use App\Modules\Admin\Http\Controllers\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Session;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -39,8 +42,6 @@ class UserController extends Controller
     public function create()
     {
         $countries=Country::orderBy('name','ASC')->get();
-        /*$cities=City::orderBy('name','ASC')->get();
-        $states=State::orderBy('name','ASC')->get();*/
         return view('Admin::user.add_user',compact('countries'));
     }
 
@@ -82,8 +83,8 @@ class UserController extends Controller
         $user->address_line=$request->address_line;
         $user->zip_code=$request->zip_code;
         $user->save();
-       /* if(!empty($request->lastName)){
-            /*$to=$request->lastName;
+        if(!empty($request->lastName)){
+            $to=$request->lastName;
             $subject = 'Extension buyer Account Details';
             $headers = "From: extensionbuyer@gmail.com\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
@@ -91,14 +92,8 @@ class UserController extends Controller
             $message ="<p><strong>Hey " .$request->name . "</strong></p>";
             $message .="<p>You account create Successfully on ExtensioinBuyer and your Email:".$request->email." and Password :".$Password." Please login your account</p>";
             $message ="<p><strong>Thankyou</strong></p>";
-            mail($to, $subject, $message, $headers);*/
-
-            /*Mail::send('Admin.user', ['user' => $request->name], function ($m) use ($user) {
-                $m->from('extensionByer@gmail.com', 'Your Account Details');
-
-                $m->to($request->email, $request->name)->subject('Account Details');
-            });
-        }*/
+            mail($to, $subject, $message, $headers);
+        }
         return redirect('/admin/user')->with('success','User Saved Successfully.');
     
     }
@@ -111,7 +106,54 @@ class UserController extends Controller
      */
     public function show($id)
     {
+        $user = array();
+        $detail=User::find($id);
+        $user['detail']=$detail;
+        $user['country']=$detail->getcountry;
+        $user['state']=$detail->getstate;
+        $user['city']=$detail->getcity;
+        $name=$user['detail']->image_path;
+        $url =  url('/').'/images/upload/'.$name;
+        $user['detail']->image_path =$url;
         
+
+    
+        
+            $extensions = array();
+            $products=Product::where('user_id', '=', $id)->get();
+            $products1 = (array) $products->toArray();
+              foreach($products1 as $key => $product){
+                $product = (array) $product;
+                $productType=$product['product_type'];
+                $product_id=$product['id'];
+                
+                $product_type = ProductType::select('type')->where('id','=',$productType)->first();
+                $product['type']=$product_type->type;
+                
+                $received_offer=DB::table('products')->where('user_id', '=', $id)->count();
+                
+                $total_offer=DB::table('offers')->where('product_id', '=', $product_id)->count();
+                $total_amount = 0;
+                if($total_offer != 0){
+                    $total_amount=DB::table('offers')->where('product_id', '=', $product_id)->sum('offered_amount');
+                    $total_amount = $total_amount/$total_offer;
+                    
+                }
+                 $product['received_offer'] = $received_offer;
+                 $product['avg_offers'] = $total_amount;
+                
+                $image=DB::table('product_images')->select( 'id','image_path','type')->where('product_id', '=', $product_id)->get();
+                foreach($image as $img){
+                    $name=$img->image_path;
+                    $url =  url('/').'/laravelcode/public/images/productmedia/'.$name;
+                    $img->image_path =$url;
+                }
+                $images = (array)  $image->toArray();
+                $product['images'] = $images;
+                $extensions[] = $product;
+            }
+        
+        return view('Admin::user.view_user',compact('user','extensions'));
     }
 
     /**
@@ -123,11 +165,9 @@ class UserController extends Controller
     public function edit($id)
     {
         $user=User::find($id);
-        //$country_id=$user->country_id;
-        //$state_id=$user->state_id;
+        $countries=Country::orderBy('name','ASC')->get();
         $states=State::where('country_id',$user->country_id)->orderBy('name','ASC')->get();
         $cities=City::where('state_id',$user->state_id)->orderBy('name','ASC')->get();
-        $countries=Country::orderBy('name','ASC')->get();
         return view('Admin::user.edit_user',compact('user','countries','cities','states'));
     }
 

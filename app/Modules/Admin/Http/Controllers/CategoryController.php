@@ -19,7 +19,6 @@ class CategoryController extends Controller
     public function index()
     {
         if (isset($_GET['category'])){
-            
           $categories = Category::Where('category_name', 'like', '%' . $_GET['category'] . '%')->orderBy('id', 'DESC')->get();
         }else{
             $categories = Category::all();

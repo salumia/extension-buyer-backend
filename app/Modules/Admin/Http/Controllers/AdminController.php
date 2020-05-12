@@ -8,7 +8,6 @@ use App\Modules\Admin\Models\Admin as Admin;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Session;
-
 class AdminController extends Controller
 {
 	/**
@@ -20,6 +19,8 @@ class AdminController extends Controller
     {
         $this->middleware('auth:admin');
     }
+
+
 
     /**
      * Display the module welcome screen
@@ -35,7 +36,7 @@ class AdminController extends Controller
     {
         return view("Admin::dashboard");
     }
-
+    
     public function adminProfile()
     {
 
@@ -54,7 +55,7 @@ class AdminController extends Controller
     }
     public function updateProfile($id, Request $request)
     {
-        dd($request->all());
+    
         $email = $request->input('email');
 
         $already = Admin::where('id','!=',$id)->where('email',$email)->get()->count();
@@ -91,5 +92,8 @@ class AdminController extends Controller
         }
         return redirect('admin/changePassword')->with('success','Password changed successfully.');
     }
+
+    
+
 }
 

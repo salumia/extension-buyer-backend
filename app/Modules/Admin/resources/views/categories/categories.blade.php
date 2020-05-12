@@ -38,8 +38,8 @@
                     <div class="records--header">
                         
                         <div class="title">
-                          <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
-                            
+                        <!--  <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
+                        -->    
                         </div>
                         <div class="actions">
                             <form action="{{url('admin/categories')}}" method="get" class="search">
@@ -48,8 +48,7 @@
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
                             </form>
                         </div>
-
-
+                        
                     </div>
                     <!-- Records Header End -->
                 </div>
@@ -84,7 +83,6 @@
                                     <th>S.No</th>
                                     <th>Name</th>
                                     <th>Status</th>
-                                    <th>Created</th>
                                     <th class="not-sortable">Actions</th>
                                 </tr>
                             </thead>
@@ -96,9 +94,9 @@
                                     <td>{{$i}}</td>
                                     <td>
                                         <a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link">{{$category->category_name}}</a>
-                                    </td> 
+                                    </td>
                                     @php
-                                    $status=array('0'=>'Deactivate','1'=>'Activate');
+                                    $status=array('0'=>'Disable','1'=>'Enable');
                                     @endphp
                                     <td>
                                         @foreach($status as $s => $s_value)
@@ -107,8 +105,7 @@
                                             @endif
                                         @endforeach 
                                     </td>
-
-                                    <td><a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link">{{date('d M,Y ',strtotime($category->created_at))}}</a></td>               
+                                    
                                     <td>
                                         <div class="dropleft">
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
@@ -119,7 +116,7 @@
                                                 <form style="margin-left: 24px;" action="{{url('admin/categories/'.$category->id)}}" method="post">
                                                 {!! csrf_field() !!} 
                                                 {{Method_field('DELETE')}}
-                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this User')" >Delete</button>
+                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this Category')" >Delete</button>
                                                 </form>
                                             </div>
                                         </div>

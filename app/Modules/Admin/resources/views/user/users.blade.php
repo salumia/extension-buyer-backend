@@ -12,45 +12,6 @@
         <!-- Sidebar End -->
     <!-- Main Container Start -->
         <main class="main--container">
-            <!-- Page Header Start -->
-            <section class="page--header">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <!-- Page Title Start -->
-                            <h2 class="page--title h5">USERS</h2>
-                            <!-- Page Title End -->
-
-                            <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active"><span>Users</span></li>
-                            </ul>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <!-- Summary Widget Start -->
-                            <div class="summary--widget">
-                                <div class="summary--item">
-                                    <p class="summary--chart" data-trigger="sparkline" data-type="bar" data-width="5" data-height="38" data-color="#009378">2,9,7,9,11,9,7,5,7,7,9,11</p>
-
-                                    <p class="summary--title">This Month</p>
-                                    <p class="summary--stats text-green">2,371,527</p>
-                                </div>
-
-                                <div class="summary--item">
-                                    <p class="summary--chart" data-trigger="sparkline" data-type="bar" data-width="5" data-height="38" data-color="#e16123">2,3,7,7,9,11,9,7,9,11,9,7</p>
-
-                                    <p class="summary--title">Last Month</p>
-                                    <p class="summary--stats text-orange">2,527,371</p>
-                                </div>
-                            </div>
-                            <!-- Summary Widget End -->
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- Page Header End -->
-
             <!-- Main Content Start -->
             <section class="main--content">
                 <div class="panel">
@@ -58,7 +19,7 @@
                     <div class="records--header">
                         
                         <div class="title">
-                          <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  
+<!--                          <a href="javascript:void(0);" id="back-user-list" class="m-4 fa fa-arrow-left" style="color: black"> Back</a>  -->
                             
                         </div>
 
@@ -100,7 +61,7 @@
                         <table id="recordsListView">
                             <thead>
                                 <tr>
-                                    <th>S.No</th>
+                                    <th>S.N0</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Country</th>
@@ -127,7 +88,7 @@
                                         @endforeach
                                     </td>
                                     @php
-                                    $status=array('0'=>'Deactivated','1'=>'Pending','2'=>'Activated');
+                                    $status=array('0'=>'Disabled','1'=>'Pending','2'=>'Enabled');
                                     @endphp
                                     <td>
                                         @foreach($status as $s => $s_value)
@@ -144,6 +105,7 @@
 
                                             <div class="dropdown-menu">
                                                 <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
+                                                <a href="{{url('admin/user/'.$user->id.'/')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
 
                                                 <form style="margin-left: 24px;" action="{{url('admin/user/'.$user->id)}}" method="post">
                                                 {!! csrf_field() !!} 
@@ -161,18 +123,6 @@
                         </table>
                     </div>
                     <!-- Records List End -->
-                     <form name="addListing_form" action="javascript:void(0)" id="addListing_form"  enctype="multipart/form-data" multiple>
-                        
-                        <div class="form-group">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="uploadimage[]" id="uploadimage" multiple>
-                                <label class="custom-file-label" for="customFile" id="add_file">Choose Pic</label>
-                            </div>
-                        </div>                        
-                        <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary" id="addListing">submit</button>
-                        </div>
-                    </form>
                 </div>
             </section>
             <!-- Main Content End -->

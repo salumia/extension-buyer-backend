@@ -1,8 +1,8 @@
-<?php
-$adminData = Session::get('adminSessionData');
-$adminId = $adminData['id'];
-$adminName = $adminData['name'];
-$adminEmail = $adminData['email'];
+l<?php
+    $adminData = Session::get('adminSessionData');
+    $adminId = $adminData['id'];
+    $adminName = $adminData['name'];
+    $adminEmail = $adminData['email'];
 ?>
 
 <!-- Navbar Start -->
@@ -10,8 +10,8 @@ $adminEmail = $adminData['email'];
             <!-- Navbar Header Start -->
             <div class="navbar--header">
                 <!-- Logo Start -->
-                <a href="index.html" class="logo">
-                    <img src="{{ asset('admin/img/logo.png')}}" alt="">
+                <a href="#" class="logo">
+                   <span style="color:white"><center> <img src="{{ asset('admin-assets/img/favicon.ico')}}" alt=""> ExtensionBuyer</center></span>
                 </a>
                 <!-- Logo End -->
 
@@ -30,12 +30,12 @@ $adminEmail = $adminData['email'];
             <!-- Sidebar Toggle Button End -->
 
             <!-- Navbar Search Start -->
-            <div class="navbar--search">
+           <!-- <div class="navbar--search">
                 <form action="search-results.html">
                     <input type="search" name="search" class="form-control" placeholder="Search Something..." required>
                     <button class="btn-link"><i class="fa fa-search"></i></button>
                 </form>
-            </div>
+            </div>-->
             <!-- Navbar Search End -->
 
             <div class="navbar--nav ml-auto">
@@ -55,7 +55,7 @@ $adminEmail = $adminData['email'];
                     </li>
 
                     <!-- Nav Language Start -->
-                    <li class="nav-item dropdown nav-language">
+                    <!--<li class="nav-item dropdown nav-language">
                         <a href="#" class="nav-link" data-toggle="dropdown">
                             <img src="{{ asset('admin/img/flags/us.png')}}" alt="">
                             <span>English</span>
@@ -82,28 +82,25 @@ $adminEmail = $adminData['email'];
                                 </a>
                             </li>
                         </ul>
-                    </li>
+                    </li>-->
                     <!-- Nav Language End -->
 
                     <!-- Nav User Start -->
                     <li class="nav-item dropdown nav--user online">
                         <a href="#" class="nav-link" data-toggle="dropdown">
-                            <img src="{{ asset('admin/img/avatars/01_80x80.png')}}" alt="" class="rounded-circle">
-                           <span>{{$adminName}}</span>
+                            <img src="{{ asset('admin-assets/img/avatars/01_80x80.png')}}" alt="" class="rounded-circle">
+                            <span>{{$adminName}}</span>
                             <i class="fa fa-angle-down"></i>
                         </a>
 
                         <ul class="dropdown-menu">
-                            <!-- <li><a href="{{ url('admin/profile') }}"><i class="far fa-user"></i>Profile</a></li> -->
-                            <!-- <li><a href="mailbox_inbox.html"><i class="far fa-envelope"></i>Inbox</a></li>
-                            <li><a href="#"><i class="fa fa-cog"></i>Settings</a></li> -->
-                            <!-- <li class="dropdown-divider"></li> -->
-                            <li><a href="{{ url('admin/editProfile/'.$adminId) }}"><i class="fa fa-edit"></i>Edit profile</a></li>
-                            <li><a href="{{ route('logout') }}"onclick="event.preventDefault();
+                            <li><a href="{{ url('admin/profile') }}"><i class="far fa-user"></i>Profile</a></li>
+                            <li><a href="{{ url('admin/editProfile/'.$adminId) }}"><i class="fa fa-edit"></i>Edit Profile</a></li>
+                            <li><a href="{{ url('admin/logout') }}"onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i>Logout</a></li>
 
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ url('admin/logout') }}" method="POST" style="display: none;">
                                         @csrf
                              </form>
                         </ul>

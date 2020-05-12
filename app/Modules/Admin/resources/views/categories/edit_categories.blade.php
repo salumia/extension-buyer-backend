@@ -81,7 +81,7 @@
                                     </div>
 
                                     @php
-                                    $status=array('0'=>'Deactivate','1'=>'Activate')
+                                    $status=array('1'=>'Enable','0'=>'Disable')
                                     @endphp
                                     <div class="form-group row">
                                         <span class="label-text col-md-3 col-form-label">Status*:</span>
