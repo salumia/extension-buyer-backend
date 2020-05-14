@@ -110,7 +110,7 @@
                                                 <form style="margin-left: 24px;" action="{{url('admin/user/'.$user->id)}}" method="post">
                                                 {!! csrf_field() !!} 
                                                 {{Method_field('DELETE')}}
-                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this User')" >Delete</button>
+                                                    <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this User and its Product')" >Delete</button>
                                                 </form>
                                             </div>
                                         </div>

@@ -91,6 +91,7 @@ class ExtensionController extends Controller
     {
         $product = Product::select( 'id','user_id','currency','product_name','product_type as type','visibilty','total_users','cat_id','product_created_date','website','price','negotiate','description','updated_at as updated_date')->where('id', '=', $id)->first();
         $product= (array) $product->toArray();
+        //dd($product);
         $productCategories=$product['cat_id'];
         
         $cateString=str_replace("#","",$productCategories);
@@ -114,8 +115,7 @@ class ExtensionController extends Controller
         $seller = DB::table('users as t1')->select('t1.id as id','t1.image_path as image','t2.name as country', 't1.name  as name', 't1.created_at as created_date')
             ->leftJoin('countries as t2', 't1.country_id', '=', 't2.id')->where('t1.id','=', $product['user_id'])
             ->first();
-            $seller = (array) $seller;
-            
+            $seller = (array) $seller;    
         $name=$seller['image'];
         $url = url('/').'/images/upload/'.$name;
         $seller['image']=str_replace("server.php","public",$url);;
@@ -209,7 +209,6 @@ class ExtensionController extends Controller
         if ($validator->fails()) { 
                 return response()->json(['error'=>$validator->errors()], 401);            
         }
-        
         $product=Product::find($id);
         $product->status=$request['status'];
         $product->reject_reason=$request['reason'];

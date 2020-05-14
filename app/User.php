@@ -72,7 +72,7 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(State::class,'state_id')->select(array('id','name','country_id'));
     }
      public function getcity() {
-        return $this->belongsTo(city::class,'city_id')->select(array('id','name','city_id'));
+        return $this->belongsTo(city::class,'city_id')->select(array('id','name','state_id'));
     }
    
 }

@@ -25,14 +25,14 @@
                         </div>-->
 
                         <!-- Tabs Nav Start -->
-                        <!--<ul class="nav nav-tabs">
+                        <!-- <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a href="#tab01" data-toggle="tab" class="nav-link active">Details</a>
                             </li>
                             <li class="nav-item">
                                 <a href="#tab02" data-toggle="tab" class="nav-link">Extension Listing</a>
                             </li>
-                        </ul>-->
+                        </ul> -->
                         <!-- Tabs Nav End -->
 
                         <!-- Tab Content Start -->
@@ -46,8 +46,7 @@
                                         <table class="table table-simple">
                                             <tbody>
                                                 <tr>
-                                                  <img src="{{$user['detail']->image_path}}" alt="{{$user['detail']->name}}" height="100" width="100" style="margin-left: 16px;"> 
-                                                    
+                                                  <img src="{{$user['detail']->image_path}}" alt="{{$user['detail']->name}}" height="100" width="100" style="margin-left: 16px;">  
                                                 </tr>
                                                  <tr>
                                                     <td>Name:</td>
@@ -75,15 +74,15 @@
                                                 
                                                 <tr>
                                                     <td>Country:</td>
-                                                    <th>{{$user['country']->name}}</th>
+                                                    <th>{{$user['country']}}</th>
                                                 </tr>
                                                 <tr>
                                                     <td>State:</td>
-                                                    <th>{{$user['state']->name}}</th>
+                                                    <th>{{$user['state']}}</th>
                                                 </tr>
                                                 <tr>
                                                     <td>City:</td>
-                                                    <th>{{$user['city']->name}}</th>
+                                                    <th>{{$user['city']}}</th>
                                                 </tr>
                                                 <tr>
                                                     <td>Address:</td>
@@ -112,11 +111,15 @@
                                 </div>
                             </div>
                             <!-- Tab Pane End -->
-
                             <!-- Tab Pane Start -->
+                            <!-- <div class="tab-pane fade" id="tab02">
+                                
+                            </div> -->
                             <!-- Tab Pane End -->
-                        </div>
+
+                         </div>
                         <!-- Tab Content End -->
+
                     </div>
                     <!-- View Order End -->
                 </div>

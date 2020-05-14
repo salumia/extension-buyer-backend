@@ -333,8 +333,10 @@ $( document ).ready(function() {
     	                  $('.alert-success').find('p').text(response.message);
         	               setTimeout(function(){
         	                    $('.getLoder').html('');
-        	                    $('#extensionId').show();
-                               location.reload();
+                                 	setTimeout(function(){
+			                    	$('#extensionId').show();
+			                    	location.reload();
+		                    	}, 3000);
                             }, 1000);
                     	
                     }else{
@@ -416,7 +418,11 @@ function getUrlParameter(sParam) {
 	                setTimeout(function(){
 	                    $("#rejectStatus-form")[0].reset();
 	                    $('#basicModal').hide();
-	                    location.reload();
+	                    	//location.reload();
+	                    	setTimeout(function(){
+			                    
+			                    	location.reload();
+		                    }, 3000);
                     }, 1000);
                 	
                 }else{

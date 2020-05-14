@@ -108,17 +108,29 @@ class UserController extends Controller
     {
         $user = array();
         $detail=User::find($id);
+        $user['state']='';
+        $user['city']='';
+        $user['country']='';
         $user['detail']=$detail;
-        $user['country']=$detail->getcountry;
-        $user['state']=$detail->getstate;
-        $user['city']=$detail->getcity;
+        $country=Country::select('name')->where('id','=',$detail->country_id)->first();
+        if($country){
+          $user['country']=$country['name'];
+        }
+        $state=State::select('name')->where('id','=',$detail->state_id)->first();
+        if($state){
+          $user['state']=$state['name'];
+        }
+        $city=City::select('name')->where('id','=',$detail->city_id)->first();
+        if($city){
+          $user['city']=$city['name'];
+        }
         $name=$user['detail']->image_path;
         $url =  url('/').'/images/upload/'.$name;
         $user['detail']->image_path =$url;
         
 
     
-        
+        //dd($user);
             $extensions = array();
             $products=Product::where('user_id', '=', $id)->get();
             $products1 = (array) $products->toArray();
@@ -152,7 +164,8 @@ class UserController extends Controller
                 $product['images'] = $images;
                 $extensions[] = $product;
             }
-        
+
+        //dd($user);
         return view('Admin::user.view_user',compact('user','extensions'));
     }
 
@@ -220,6 +233,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user= User::find($id);
+        $products=Product::where('user_id','=',$id)->get();
+        foreach($products as $product){
+          $product->Delete();
+        }
         $user->Delete();
         return redirect('/admin/user')->with('success','User Delete Successfully.');
     }
