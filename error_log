@@ -1,11 +1,14 @@
-[14-Apr-2020 15:33:54 UTC] PHP Fatal error:  Declaration of Symfony\Component\Translation\TranslatorInterface::setLocale($locale) must be compatible with Symfony\Contracts\Translation\LocaleAwareInterface::setLocale(string $locale) in /home/rtcsof5d8edw/public_html/sell-admin/vendor/symfony/translation/TranslatorInterface.php on line 24
-[17-Apr-2020 09:12:20 UTC] PHP Fatal error:  Class 'App\Http\Controllers\Api\Controller' not found in /home/rtcsof5d8edw/public_html/sell-admin/app/Modules/Product/Http/Controllers/ProductController.php on line 18
-[23-Apr-2020 07:29:37 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:29:37 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:29:44 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:29:48 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:29:49 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:29:49 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:30:00 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:30:38 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
-[23-Apr-2020 07:30:38 UTC] PHP Fatal error:  Cannot redeclare App\Http\Controllers\AuthController::registration() in /home/rtcsof5d8edw/public_html/sell-admin/app/Http/Controllers/AuthController.php on line 204
+[06-May-2020 06:52:57 UTC] PHP Fatal error:  Cannot use App\Modules\Admin\Models\Category as Category because the name is already in use in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Product/Http/Controllers/ProductController.php on line 16
+[06-May-2020 08:03:15 UTC] PHP Fatal error:  Cannot use temporary expression in write context in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Product/Http/Controllers/ProductController.php on line 522
+[11-May-2020 11:09:44 UTC] PHP Warning:  Uncaught ErrorException: Object of class stdClass could not be converted to string in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Admin/Http/Controllers/ExtensionController.php:49
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(4096, 'Object of class...', '/home/rtcsof5d8...', 49, Array)
+#1 /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Admin/Http/Controllers/ExtensionController.php(49): implode(' ', Array)
+#2 [internal function]: App\Modules\Admin\Http\Controllers\ExtensionController->index()
+#3 /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/vendor/laravel/framework/src/Illuminate/Routing/Controller.php(54): call_user_func_array(Array, Array)
+#4 /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/vendor/laravel/framework/src/Illuminate/Routing/ControllerDispatcher.php(45): Illuminate\Routing\Controller->callAction('index', Array)
+#5 /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/vendor/laravel/framework/src/Illu in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Admin/Http/Controllers/ExtensionController.php on line 49
+[11-May-2020 11:09:44 UTC] PHP Fatal error:  Object of class stdClass could not be converted to string in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Admin/Http/Controllers/ExtensionController.php on line 49
+[12-May-2020 08:03:51 UTC] PHP Fatal error:  Cannot use temporary expression in write context in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Admin/Http/Controllers/UserController.php on line 153
+[12-May-2020 08:10:07 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 98570240 bytes) in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Product/Http/Controllers/ProductController.php on line 443
+[12-May-2020 08:10:45 UTC] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 98570240 bytes) in /home/rtcsof5d8edw/public_html/extbuyer/laravelcode/app/Modules/Product/Http/Controllers/ProductController.php on line 443
