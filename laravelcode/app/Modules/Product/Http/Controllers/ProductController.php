@@ -31,8 +31,8 @@ class ProductController extends Controller
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: *');
         header('Access-Control-Allow-Headers: *');
-    	auth()->setDefaultDriver('api');
-    	
+        auth()->setDefaultDriver('api');
+        
     }
 
     /**
@@ -149,26 +149,26 @@ class ProductController extends Controller
             //:
         ]);
         
-       	if ($validator->fails()) { 
-				return response()->json(['error'=>$validator->errors()], 401);            
-		}
-		
-		
-	    $cat_id=$request->cat_id;
-	    if(is_array($cat_id)){
-	       if(count($cat_id)>0){
-	           array_walk($cat_id, function (&$value, $key) {
+        if ($validator->fails()) { 
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
+        
+        
+        $cat_id=$request->cat_id;
+        if(is_array($cat_id)){
+           if(count($cat_id)>0){
+               array_walk($cat_id, function (&$value, $key) {
                    $value="#$value#";
                 });
-        		$catIds = join(",",$cat_id);
-	       }
-	       
-	    }else{
-	       $error = array('cat_id'=>["invalide formate."]);
+                $catIds = join(",",$cat_id);
+           }
+           
+        }else{
+           $error = array('cat_id'=>["invalide formate."]);
             return response()->json(['error'=>$error], 200);
-	    }
-	  
-		
+        }
+      
+        
         $userId = auth()->user()->id;
         $postbody = (object) $postbody;
         
@@ -196,19 +196,19 @@ class ProductController extends Controller
         $product_id=$product->id;
         
         $userbase=$request->userbase;
-		if($userbase){
-		    foreach($userbase as $user){
-		        $country_id= $user['country_id'];
-		        $user= $user['user'];
-		        
-		        $userbase= new Userbase;
+        if($userbase){
+            foreach($userbase as $user){
+                $country_id= $user['country_id'];
+                $user= $user['user'];
+                
+                $userbase= new Userbase;
                 $userbase->country_id=$country_id;
                 $userbase->product_id=$product_id;
                 $userbase->users=$user;
                 $userbase->save();
-		    }
-		}
-		
+            }
+        }
+        
         
         if(isset($postbody->product_image_ids)){
             //dd($postbody->product_image_ids);
@@ -350,16 +350,20 @@ class ProductController extends Controller
                 if(count($offers)>0){
                     foreach($offers as $offer){
                         $offer = (array) $offer;
-                        $offer_details=DB::table('offers')->select('buyer_id','offered_amount')
+                        $offer_details=DB::table('offers')->select('buyer_id','offered_amount','counter_offer')
                                                             ->where('buyer_id', '=', $offer['buyer_id'])
                                                             ->where('product_id','=',$product_id)
                                                             ->where('awarded', '=',1)->first();
+                                                            
                         if($offer_details){
+                           
                             $buyerName=DB::table('users')->select('name','username')->where('id','=',$offer_details->buyer_id)->first();
                             $product_in['buyer_id']=$offer_details->buyer_id;
                             $product_in['buyer_name']=$buyerName->name;
                             $product_in['username']=$buyerName->username;
+                            $product_in['counter_offer']=$offer_details->counter_offer;
                             $product_in['sold_amount'] = $offer_details->offered_amount;
+                             
                         }
                     }
                 }
@@ -401,7 +405,7 @@ class ProductController extends Controller
                             $offer = (array) $offer;
                             
                             
-                            $offer_details=DB::table('offers')->select('buyer_id','offered_amount')
+                            $offer_details=DB::table('offers')->select('buyer_id','offered_amount','counter_offer')
                                                             ->where('buyer_id', '=', $offer['buyer_id'])
                                                             ->where('product_id','=',$product_id)
                                                             ->where('awarded', '=',1)
@@ -413,6 +417,7 @@ class ProductController extends Controller
                                 $product_sold['buyer_id']=$offer_details->buyer_id;
                                 $product_sold['buyer_name']=$buyerName->name;
                                 $product_sold['username']=$buyerName->username; 
+                                $product_sold['offer_counter'] =$offer_details->counter_offer;
                                 $product_sold['sold_offer'] = $offer_details->offered_amount;
                             }                                
                         }
@@ -508,7 +513,7 @@ class ProductController extends Controller
         if($user and $product['user_id'] == auth()->user()->id){
             
             $offers = DB::table('offers')
-                        ->select('offers.id as offer_id','offers.awarded','users.name as first_name', 'users.last_name','users.username', 'users.image_path','users.country_id as country_code', 'users.country_id', 'users.state_id',  'users.city_id','offers.offered_amount')
+                        ->select('offers.id as offer_id','offers.counter_offer','offers.awarded','users.name as first_name', 'users.last_name','users.username', 'users.image_path','users.country_id as country_code', 'users.country_id', 'users.state_id',  'users.city_id','offers.offered_amount')
                         ->leftJoin('users', 'offers.buyer_id', '=', 'users.id')
                         ->where('offers.product_id','=',$id )
                         ->get();
@@ -566,9 +571,10 @@ class ProductController extends Controller
             }
             $my_offer['buyer-details']=$buyer;
             
-            $sendOffer = Offer::select('id as offer_id', 'offered_amount', 'awarded', 'created_at')->where([ ['buyer_id','=',$userIdAsBuyer],[ 'product_id', '=' , $id ] ])->first();
+            $sendOffer = Offer::select('id as offer_id','counter_offer', 'offered_amount', 'awarded', 'created_at')->where([ ['buyer_id','=',$userIdAsBuyer],[ 'product_id', '=' , $id ] ])->first();
             if($sendOffer){
                 $sendOffer = (array) $sendOffer->toArray();
+                $my_offer['buyer-details']['counter_offer']=$sendOffer['counter_offer'];
                 $my_offer['buyer-details']['offer-amount']=$sendOffer['offered_amount'];
                 $my_offer['buyer-details']['offer_id']=$sendOffer['offer_id'];
                 $my_offer['buyer-details']['awarded']=$sendOffer['awarded'];
@@ -592,17 +598,6 @@ class ProductController extends Controller
                 
                 $product['send_offers'] = $my_offer; 
             }
-           /* $acessRequest = Productaccess::select('id as request_id', 'status')->where([ ['sender_id','=',$userIdAsBuyer],[ 'product_id', '=' , $id ] ])->first();
-            if($acessRequest){
-                $acessRequest = (array) $acessRequest->toArray();
-                
-                $buyer['request_id']=$acessRequest['request_id'];
-                $buyer['status']=$acessRequest['status'];
-                unset($buyer['id']);
-                $product['access_request'] = $buyer; 
-            }else{
-                $product['access_request'] = [];
-            }*/
             
             $buyerRequest = Productaccess::where([ ['sender_id','=',$userIdAsBuyer],[ 'product_id', '=' , $id ],['status','=',1] ])->first();
             if($buyerRequest){
@@ -722,62 +717,62 @@ class ProductController extends Controller
             'description' => 'required'
         ]);
         if ($validator->fails()) { 
-				return response()->json(['error'=>$validator->errors()], 401);            
-		}
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
         
         $userId = auth()->user()->id;
         
         $cat_id=$request->cat_id;
-	    if(is_array($cat_id)){
-	       if(count($cat_id)>0){
-	           array_walk($cat_id, function (&$value, $key) {
+        if(is_array($cat_id)){
+           if(count($cat_id)>0){
+               array_walk($cat_id, function (&$value, $key) {
                    $value="#$value#";
                 });
-        		$catIds = join(",",$cat_id);
-	       }
-	       
-	    }
+                $catIds = join(",",$cat_id);
+           }
+           
+        }
         
-		$product=Product::find($id);
-	    $product->product_name=$request->product_name;
-	    $product->product_type= $request->product_type_id;
-	    $product->user_id = $userId;
-	    $product->cat_id = $catIds;
-	    $product->total_users=$request->total_users;
-	    $product->visibilty = $request->visibilty;
-	    $product->product_created_date=$request->publish_date;
-	    $product->website=$request->website;
-	    $product->currency = $request->currency;
-	    $product->price=$request->price;
-	    $product->negotiate=$request->negotiate;
-	    $product->description=$request->description;
-	    //$product->status = $request->status;
-	    $product->store_url=$request->store_url;
-	    /*$product->service_fee =  20;
-	    $product->is_sold = 0;*/
-		$product->update();
-		$userbase=$request->userbase;
-		
-		$userbase_data=Userbase::where('product_id','=',$id)->get();
-		foreach ($userbase_data as $data){
-		    $data->delete();
-		}
-		if($userbase){
-		    foreach($userbase as $user){
-		        if($user){
-		            $country_id= $user['country_id'];
-		            $user= $user['user'];
-    	            $userbase= new Userbase;
-    	            $userbase->country_id=$country_id;
+        $product=Product::find($id);
+        $product->product_name=$request->product_name;
+        $product->product_type= $request->product_type_id;
+        $product->user_id = $userId;
+        $product->cat_id = $catIds;
+        $product->total_users=$request->total_users;
+        $product->visibilty = $request->visibilty;
+        $product->product_created_date=$request->publish_date;
+        $product->website=$request->website;
+        $product->currency = $request->currency;
+        $product->price=$request->price;
+        $product->negotiate=$request->negotiate;
+        $product->description=$request->description;
+        //$product->status = $request->status;
+        $product->store_url=$request->store_url;
+        /*$product->service_fee =  20;
+        $product->is_sold = 0;*/
+        $product->update();
+        $userbase=$request->userbase;
+        
+        $userbase_data=Userbase::where('product_id','=',$id)->get();
+        foreach ($userbase_data as $data){
+            $data->delete();
+        }
+        if($userbase){
+            foreach($userbase as $user){
+                if($user){
+                    $country_id= $user['country_id'];
+                    $user= $user['user'];
+                    $userbase= new Userbase;
+                    $userbase->country_id=$country_id;
                     $userbase->product_id=$id;
                     $userbase->users=$user;
                     $userbase->save();
-		        }
-		    }
-		}
-		
-		if($request->deleted_image_ids){
-		    
+                }
+            }
+        }
+        
+        if($request->deleted_image_ids){
+            
             foreach($request->deleted_image_ids as $delete_id){
                 $id = (int) $delete_id;
                 $ProductImage = ProductImage::find($id);
@@ -793,7 +788,7 @@ class ProductController extends Controller
             }
         }
 
-		if(isset($request->product_image_ids)){
+        if(isset($request->product_image_ids)){
             foreach($request->product_image_ids as $image_id){
                 $image_id = (int) $image_id;
                 $TempProductImage = TempProductImage::find($image_id);
@@ -808,8 +803,8 @@ class ProductController extends Controller
                 
             }
         }
-		
-		$response = array('status'=> 200, 'message'=>"Product updated Successfully.");
+        
+        $response = array('status'=> 200, 'message'=>"Product updated Successfully.");
         return response()->json($response);
     }
     
@@ -835,10 +830,10 @@ class ProductController extends Controller
             'offer_amount' => 'required'
         ]);
         
-       	if ($validator->fails()) { 
-				return response()->json(['error'=>$validator->errors()], 401);            
-		}
-		
+        if ($validator->fails()) { 
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
+        
         $postbody = (object) $postbody;
         $userId = auth()->user()->id;
         $my_offer=array();
@@ -873,10 +868,6 @@ class ProductController extends Controller
                     $offer->awarded = 0;
                     $offer->offered_amount = $postbody->offer_amount;
                     $offer->save();
-                    
-                    /*$product=Product::where('id','=',$postbody->product_id)->first();
-                    $product->status=2;
-                    $product->update();*/
                     
                     $my_offer['buyer-details']['offered_amount']=$postbody->offer_amount;
                     $received_offer=DB::table('products')->where('user_id', '=', $userId)->count();
@@ -954,10 +945,10 @@ class ProductController extends Controller
             'message' => 'required'
         ]);
         
-       	if ($validator->fails()) { 
-				return response()->json(['error'=>$validator->errors()], 401);            
-		}
-		
+        if ($validator->fails()) { 
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
+        
         $postbody = (object) $postbody;
         $userId = auth()->user()->id;
         $ownProductOffer=DB::table('products')->where('user_id', '=', $userId)
@@ -1439,6 +1430,37 @@ class ProductController extends Controller
         return response()->json($response);
     }
     
+    
+    public function offerCounter(Request $request){
+        try {
+                $user = auth()->userOrFail();
+            } catch (\Tymon\JWTAuth\Exceptions\UserNotDefinedException $e) {
+                // do something
+                
+                $error = $e->getMessage(); 
+                return response()->json(['error' =>$e->getMessage()], 401);
+            }
+            
+        $postbody = $request->json()->all();
+        
+        $validator = Validator::make($postbody, [ 
+            'offer_id' => 'required|numeric',
+            'counter_offer' => 'required'
+        ]);
+        
+        if ($validator->fails()) { 
+                return response()->json(['error'=>$validator->errors()], 401);            
+        }
+        $postbody = (object) $postbody;
+
+        $offer =Offer::where('id','=',$postbody->offer_id)->first();
+        $offer->counter_offer=$postbody->counter_offer;
+        $offer->update();
+        
+        $response = array('status'=> 200, 'message'=>"Counter offer save Sucessfully");
+        return response()->json($response);
+        
+    }
     
 
 }
