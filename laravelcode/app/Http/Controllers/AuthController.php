@@ -153,7 +153,7 @@ class AuthController extends Controller
 				return response()->json(['error'=>$validator->errors()], 401);            
 			}
 			
-			$lastName=substr($user['last_name'], 0, 1);
+			$lastName=substr($user['last_name'], 0, 3);
 			$uniqueId=rand(100,1000);
             $firstName=explode(" ",$user['first_name']);
 			$uniqueUserName=$lastName.$firstName[0].$uniqueId;

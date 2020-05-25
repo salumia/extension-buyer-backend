@@ -34,6 +34,7 @@ class ExtensionController extends Controller
             foreach ($extension as $ext) {
                 $extension = (array) $ext;
                 if($extension){
+                   
                     $productType=$extension['product_type'];
                     $categoryIdString=$extension['cat_id'];
                     $cateString=str_replace("#","",$categoryIdString);
@@ -45,7 +46,8 @@ class ExtensionController extends Controller
                     $product_type = ProductType::select('type')->where('id','=',$productType)->first();
                     $extension['type']=$product_type['type'];
                     $userId=$extension['user_id'];
-                    $received_offer=DB::table('products')->where('user_id', '=', $userId)->count();
+                    $received_offer=DB::table('offers')->where('product_id', '=', $extension['id'])->count();
+                    //dd($received_offer);
                     $extension['received_offer']=$received_offer; 
 
                     $product_seller = User::select('name')->where('id','=',$userId)->first();

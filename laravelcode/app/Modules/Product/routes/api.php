@@ -12,9 +12,9 @@ Route::group([ 'prefix' => 'api'], function()
 
     Route::post('product/saveimages', 'ProductController@saveProductImage');
     
-    Route::get('product/listing', 'ProductController@productListing'); //sellerListing
+    Route::get('product/listing', 'ProductController@productListing');
     
-    Route::get('product/view/{id}', 'ProductController@productView'); 
+    Route::get('product/view/{id}', 'ProductController@productView');
     
     Route::get('getProductRawDetails/{id}', 'ProductController@getProductRawDetails');
     
@@ -32,7 +32,7 @@ Route::group([ 'prefix' => 'api'], function()
 
     Route::get('product/getLatestListings', 'ProductController@getLatestListings');
 
-    Route::get('product/getBuyerListings', 'ProductController@getBuyerListings');   //buyerListing
+    Route::get('product/getBuyerListings', 'ProductController@getBuyerListings');
     
     Route::get('product/purchaseSucceed/{id}', 'ProductController@purchaseSucceed');
     
