@@ -71,26 +71,47 @@ class ChatController extends Controller
         $userId = auth()->user()->id;
         $productId=$request->product_id;
 
-        //$chat = Chat::where('product_id','=',$productId)->where('sender_id','=',$userId)->orWhere('receiver_id','=',$userId)->get();
+        $details = array();
 
-        $chats = DB::table('users as t1')->select('t1.id as id','t1.image_path as image','t1.name','t2.id','t2.product_id','t2.sender_id','t2.receiver_id','t2.created_at')
-            ->leftJoin('chats as t2', 't1.id', '=', 't2.receiver_id')->where('t2.product_id','=',$productId )->where('t2.sender_id','=',$userId )->orwhere('t2.receiver_id','=',$userId)
-            ->get();
+        $chats = Chat::where('product_id','=',$productId)->where('sender_id','=',$userId)->orWhere('receiver_id','=',$userId)->get();
+        $chats =(array) $chats->toarray();
+        foreach ($chats as $chat) {
+            $chat = (array) $chat;
+            $senderId=$chat['sender_id'];
+            $receiverId= $chat['receiver_id'];
+            $SenderDetail=User::select('id','image_path as image','name')->where('id','=',$senderId)->first();
+            $SenderDetail =(array) $SenderDetail->toarray();
+            $name=$SenderDetail['image'];
+            if($name){
+                $destination_path=public_path('/images/profileImage/full_image/');
+                $destination = str_replace("laravelcode/public/","",$destination_path);
+                if (file_exists($destination.$name)) {
+                    $url = url('/').'/images/profileImage/full_image/'.$name;
+                    $SenderDetail['image']=$url;
+                 }else{
+                    $SenderDetail['image']=''; 
+                 }
+            }
+            $chat['sender-detail']=$SenderDetail;
 
-         foreach ($chats as $chat) {
-         	$name=$chat->image;
-         	if($name){
-	            $destination_path=public_path('/images/profileImage/full_image/');
-	            $destination = str_replace("laravelcode/public/","",$destination_path);
-	            if (file_exists($destination.$name)) {
-	                $url = url('/').'/images/profileImage/full_image/'.$name;
-	                $chat->image=$url;
-	             }else{
-	                $chat->image=''; 
-	             }
-	        }
-         }
-        $response = array('status'=> 200, 'message'=>"Chat Details",'chat'=>$chats);
+            $ReciverDetail=User::select('id','image_path as image','name')->where('id','=',$receiverId)->first();
+            $ReciverDetail =(array) $ReciverDetail->toarray();
+            $image=$ReciverDetail['image'];
+            if($name){
+                $destination_path=public_path('/images/profileImage/full_image/');
+                $destination = str_replace("laravelcode/public/","",$destination_path);
+                if (file_exists($destination.$image)) {
+                    $url = url('/').'/images/profileImage/full_image/'.$image;
+                    $ReciverDetail['image']=$url;
+                 }else{
+                    $ReciverDetail['image']=''; 
+                 }
+            }
+            $chat['receiver-detail']=$ReciverDetail;
+            unset($chat['updated_at']);
+            $details[] = $chat;
+        }
+        $response = array('status'=> 200, 'message'=>"Chat Details",'chat'=>$details);
         return response()->json($response);
 	}	
 
