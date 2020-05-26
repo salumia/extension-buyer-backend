@@ -194,6 +194,26 @@ class ExtensionController extends Controller
             $product=Product::find($id);
             $product->status=$request['status'];
             $product->update();
+            /*-------------------- mail function----------------*/
+            if($product->user_id){
+                
+                $user=User::select('name','email')->where('id','=',$product->user_id)->first();
+                $to=$user->email;
+                $from="extensionbuyer@gmail.com";
+                $subject = "Extension Approved";
+                
+                $headers = "From: ".$from."\r\n";
+                $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
+                $headers .= "MIME-Version: 1.0\r\n";
+                $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+                
+                $message ="<p><strong>Hey " .$user->name. "</strong></p>";
+                $message .="<p>congratulations! Your Extension is Approved </p>";
+                $message .="<p><strong>Thankyou</strong></p>";
+                
+                mail($to, $subject, $message, $headers);
+            }
+        /*--------------------end mail function----------------*/
               
         $response = array('status'=> 200, 'message'=> 'Status Updated Successfully');
        return response()->json($response);
@@ -216,6 +236,30 @@ class ExtensionController extends Controller
         $product->status=$request['status'];
         $product->reject_reason=$request['reason'];
         $product->update();
+        /*-------------------- mail function----------------*/
+        if($product->user_id){
+            
+            $user=User::select('name','email')->where('id','=',$product->user_id)->first();
+            $to=$user->email;
+            $from="extensionbuyer@gmail.com";
+            $subject = "Extension Rejected";
+            
+            $headers = "From: ".$from."\r\n";
+            $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+            
+            $message ="<p><strong>Hey " .$user->name. "</strong></p>";
+            $message .="<p>Your Extension is Rejected. Reason : ".$request['reason']." </p>";
+            $message .="<p><strong>Thankyou</strong></p>";
+            
+            mail($to, $subject, $message, $headers);
+        }
+        /*--------------------end mail function----------------*/
+
+
+
+
         $response = array('status'=> 200, 'message'=> 'Status Updated Successfully');
        return response()->json($response);
 

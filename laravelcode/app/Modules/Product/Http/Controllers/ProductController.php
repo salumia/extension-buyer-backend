@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Modules\Product\Models\Product as Product;
-
+use App\Modules\Admin\Models\Admin as Admin;
 use App\Modules\Product\Models\Categorie as Category;
 use App\Modules\Product\Models\Product_type as ProductType;
 use App\Modules\Product\Models\Product_image as ProductImage;
@@ -225,6 +225,27 @@ class ProductController extends Controller
                 
             }
         }
+        $admin=Admin::select('name','email')->first();
+        $user =User::select('name','email')->where('id','=',$userId)->first();
+        dd($admin);
+        //mail function//
+        if($admin){
+            $to     =   $admin->email;
+            $from   =   $user->email;
+            $subject = "Add new extension";
+            
+            $headers = "From: ".$user->email."\r\n";
+            $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+            
+            $message ="<p><strong>Hey " .$admin->name. "</strong></p>";
+            $message .="<p>New Extension added by User: ".$user->name." and Extension Name: ".$request->product_name." Please Approve this Extension.</p>";
+            $message .="<p><strong>Thankyou</strong></p>";
+            mail($to, $subject, $message, $headers);
+        }
+        //end mail function//
+        
         $response = array('status'=> 200, 'message'=>"Product is created successfully.");
         return response()->json($response);
       
@@ -513,7 +534,7 @@ class ProductController extends Controller
         if($user and $product['user_id'] == auth()->user()->id){
             
             $offers = DB::table('offers')
-                        ->select('offers.id as offer_id','offers.counter_offer','offers.awarded','users.name as first_name', 'users.last_name','users.username', 'users.image_path','users.country_id as country_code', 'users.country_id', 'users.state_id',  'users.city_id','offers.offered_amount')
+                        ->select('offers.id as offer_id','offers.counter_offer','offers.awarded','users.id as buyer_id','users.name as first_name', 'users.last_name','users.username', 'users.image_path','users.country_id as country_code', 'users.country_id', 'users.state_id',  'users.city_id','offers.offered_amount')
                         ->leftJoin('users', 'offers.buyer_id', '=', 'users.id')
                         ->where('offers.product_id','=',$id )
                         ->get();
@@ -1354,14 +1375,42 @@ class ProductController extends Controller
         }
         $sellerId = auth()->user()->id;
         
-        $offerProductId=offer::select('product_id')->where('id','=',$id)->first();
+        $offerProductId=offer::select('product_id','buyer_id')->where('id','=',$id)->first();
         $product=Product::where('id','=',$offerProductId->product_id)->first();
-        $product->status=2;
+        $product->status=1;
         $product->update();
         
         $offers=Offer::where('id','=',$id)->first();
         $offers->awarded = 1;
         $offers->update();
+        if($sellerId){
+            $seller_details=User::select('email','name')->where('id','=',$sellerId)->first();
+            
+            $buyer_details =User::select('email','name')->where('id','=',$offerProductId->buyer_id)->first();
+             /*-------------------- mail function----------------*/
+            
+            $user=User::select('name','email')->where('id','=',$product->user_id)->first();
+            
+            $to     =   $buyer_details->email;
+            $from   =   $seller_details->email;
+            $subject = "Extension Offer Accepted";
+            
+            $headers = "From: ".$from."\r\n";
+            $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+            
+            $message ="<p><strong>Hey " .$buyer_details->name. "</strong></p>";
+            $message .="<p>congratulations! Your Extension is Accepted </p>";
+            $message .="<p><strong>Thankyou</strong></p>";
+            
+            mail($to, $subject, $message, $headers);
+            
+            /*--------------------end mail function----------------*/
+            
+ 
+        }
+        
         $response = array('status'=> 200, 'message'=>"Offer Accepted");
         return response()->json($response);
     }
@@ -1379,7 +1428,7 @@ class ProductController extends Controller
         }
         $sellerId = auth()->user()->id;
         
-        $offerProductId=offer::select('product_id')->where('id','=',$id)->first();
+        $offerProductId=offer::select('product_id','buyer_id')->where('id','=',$id)->first();
         $product=Product::where('id','=',$offerProductId->product_id)->first();
         $product->status=2;
         $product->update();
@@ -1387,6 +1436,32 @@ class ProductController extends Controller
         $offers=Offer::where('id','=',$id)->first();
         $offers->awarded = 2;
         $offers->update();
+        if($sellerId){
+            $seller_details=User::select('email','name')->where('id','=',$sellerId)->first();
+            $buyer_details =User::select('email','name')->where('id','=',$offerProductId->buyer_id)->first();
+            
+             /*-------------------- mail function----------------*/
+    
+            $user=User::select('name','email')->where('id','=',$product->user_id)->first();
+            $to     =   $buyer_details->email;
+            $from   =   $seller_details->email;
+            $subject = "Extension Offer Rejected";
+            
+            $headers = "From: ".$from."\r\n";
+            $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
+            $headers .= "MIME-Version: 1.0\r\n";
+            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+            
+            $message ="<p><strong>Hey " .$buyer_details->name. "</strong></p>";
+            $message .="<p>Sorry! Your Extension is Rejected. </p>";
+            $message .="<p><strong>Thankyou</strong></p>";
+            
+            mail($to, $subject, $message, $headers);
+            
+            /*--------------------end mail function----------------*/
+            
+ 
+        }
         $response = array('status'=> 200, 'message'=>"Offer Rejected");
         return response()->json($response);
     }

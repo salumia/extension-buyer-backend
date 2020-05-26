@@ -97,6 +97,7 @@ class UserController extends Controller
             $subject = "Extension buyer Account Details";
             
             $headers = "From: ".$from."\r\n";
+            $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
             
