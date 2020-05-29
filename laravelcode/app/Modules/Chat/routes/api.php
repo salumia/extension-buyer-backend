@@ -6,4 +6,6 @@ Route::group([ 'prefix' => 'api'], function()
 
     Route::post('get/chat', 'ChatController@ChatDetails');
     
+    Route::post('loadMore', 'ChatController@loadMore');
+    
 });

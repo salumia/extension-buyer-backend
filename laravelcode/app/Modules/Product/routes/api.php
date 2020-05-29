@@ -43,9 +43,8 @@ Route::group([ 'prefix' => 'api'], function()
     Route::get('request/accept/{id}', 'ProductController@requestAccept');
     
     Route::get('request/reject/{id}', 'ProductController@requestReject');
-
-    Route::post('offer/counter', 'ProductController@offerCounter');
     
+    Route::post('offer/counter', 'ProductController@offerCounter');
     
 });
  

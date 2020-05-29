@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\User as User;
 use App\Modules\Country\Models\Country as Country;
 use App\Modules\Product\Models\Product as Product;
+use App\Modules\Admin\Models\Admin as Admin;
 use App\Modules\Product\Models\Product_type as ProductType;
 use App\Modules\Product\Models\Product_image as ProductImage;
 use App\Modules\State\Models\State as State;
@@ -70,44 +71,56 @@ class UserController extends Controller
         if ($validator->fails()) { 
             return response()->json(['error'=>$validator->errors()], 200);            
         }
-        $status=1;
-        $Password=12345678;
+        $email=$request->email;
+        $already = User::where('email',$email)->get()->count();
+        $admin = Admin::where('email',$email)->get()->count();
+        if($already or $admin){
+            return response()->json(['error'=>['email'=>'This email is already taken.']], 401); 
+          
+         }else{
+            $status=1;
+            $Password=str_random(20);
+            
+            $lastName=substr($request->lastName, 0, 3);
+    		$uniqueId=rand(100,1000);
+            $firstName=explode(" ",$request->firstName);
+    		$uniqueUserName=$lastName.$firstName[0].$uniqueId;
+    	
+            $user= new User;
+            $user->name=$request->firstName;
+            $user->last_name=$request->lastName;
+            $user->email=$request->email;
+            $user->phone_no=$request->phone_no;
+            $user->username=$uniqueUserName;
+            $user->country_id=$request->country_id;
+            $user->state_id=$request->state_id;
+            $user->city_id=$request->city_id;
+            $user->password=Hash::make($Password);
+            $user->status=$status;
+            $user->address_line=$request->address_line;
+            $user->zip_code=$request->zip_code;
+            $user->save();
+            if(!empty($request->email)){
+                $to=$request->email;
+                $from="extensionbuyer@gmail.com";
+                $subject = "User Account Details";
+                
+                $headers = "From: ".$from."\r\n";
+                $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
+                $headers .= "MIME-Version: 1.0\r\n";
+                $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+                
+                $message ="<p><strong>Hey " .$request->firstName. "</strong></p>";
+                $message .="<p>You account created Successfully on ExtensioinBuyer and your Email: ".$request->email." and Password : ".$Password."  Please login your account</p>";
+                $message .="<p><strong>Thankyou</strong></p>";
+                
+                mail($to, $subject, $message, $headers);
+            }
+            return redirect('/admin/user')->with('success','User Saved Successfully.');
+         }
+
         
-        $lastName=substr($request['last_name'], 0, 1);
-		$uniqueId=rand(100,1000);
-        $firstName=explode(" ",$request['first_name']);
-		$uniqueUserName=$lastName.$firstName[0].$uniqueId;
-        $user= new User;
-        $user->name=$request->firstName;
-        $user->last_name=$request->lastName;
-        $user->email=$request->email;
-        $user->phone_no=$request->phone_no;
-        $user->username=$uniqueUserName;
-        $user->country_id=$request->country_id;
-        $user->state_id=$request->state_id;
-        $user->city_id=$request->city_id;
-        $user->password=Hash::make($Password);
-        $user->status=$status;
-        $user->address_line=$request->address_line;
-        $user->zip_code=$request->zip_code;
-        $user->save();
-        if(!empty($request->email)){
-            $to=$request->email;
-            $from="extensionbuyer@gmail.com";
-            $subject = "Extension buyer Account Details";
-            
-            $headers = "From: ".$from."\r\n";
-            $headers .= "Reply-To: <noreply@extensionbuyer.com>\r\n";
-            $headers .= "MIME-Version: 1.0\r\n";
-            $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-            
-            $message ="<p><strong>Hey " .$request->firstName. "</strong></p>";
-            $message .="<p>You account create Successfully on ExtensioinBuyer and your Email:".$request->email." and Password :".$Password." Please login your account</p>";
-            $message .="<p><strong>Thankyou</strong></p>";
-            
-            mail($to, $subject, $message, $headers);
-        }
-        return redirect('/admin/user')->with('success','User Saved Successfully.');
+        
     
     }
 

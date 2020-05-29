@@ -84,7 +84,7 @@
                                     <div class="form-group row">
                                         <span class="label-text col-md-3 col-form-label">Phone*: </span>
                                         <div class="col-md-9">
-                                            <input type="text" minlength="10"  name="phone_no" value="{{$user->phone_no}}" class="form-control">
+                                            <input type="text" minlength="10" maxlength="10"  name="phone_no" value="{{$user->phone_no}}" class="form-control">
                                         </div>
                                     </div>
                                    
@@ -132,7 +132,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <span class="label-text col-md-3 col-form-label">Zipcode: </span>
+                                        <span class="label-text col-md-3 col-form-label">Zipcode*: </span>
                                         <div class="col-md-9">
                                             <input type="text" value="{{$user->zip_code}}"  name="zip_code" class="form-control">
                                         </div>

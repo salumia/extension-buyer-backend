@@ -194,6 +194,7 @@ class ExtensionController extends Controller
             $product=Product::find($id);
             $product->status=$request['status'];
             $product->update();
+            
             /*-------------------- mail function----------------*/
             if($product->user_id){
                 
@@ -236,7 +237,8 @@ class ExtensionController extends Controller
         $product->status=$request['status'];
         $product->reject_reason=$request['reason'];
         $product->update();
-        /*-------------------- mail function----------------*/
+        
+        /*--------------------mail function----------------*/
         if($product->user_id){
             
             $user=User::select('name','email')->where('id','=',$product->user_id)->first();
@@ -256,10 +258,7 @@ class ExtensionController extends Controller
             mail($to, $subject, $message, $headers);
         }
         /*--------------------end mail function----------------*/
-
-
-
-
+        
         $response = array('status'=> 200, 'message'=> 'Status Updated Successfully');
        return response()->json($response);
 
