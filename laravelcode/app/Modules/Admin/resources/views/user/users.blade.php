@@ -24,7 +24,7 @@
                         </div>
 
                         <div class="actions">
-                            <form action="{{url('admin/user')}}" method="get" class="search">
+                            <form action="{{url('/user')}}" method="get" class="search">
                                 {{ csrf_field() }}
                                 <input id='search-email' type="text" class="form-control" name="email" placeholder="Email..." required>
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
@@ -77,13 +77,13 @@
                                 <tr>
                                     <td>{{$i}}</td>
                                     <td>
-                                        <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="btn-link">{{$user->name}}</a>
+                                        <a href="{{url('/user/'.$user->id.'/edit')}}" class="btn-link">{{$user->name}}</a>
                                     </td>
-                                    <td><a href="{{url('admin/user/'.$user->id.'/edit')}}" class="btn-link">{{$user->email}}</a></td>
+                                    <td><a href="{{url('/user/'.$user->id.'/edit')}}" class="btn-link">{{$user->email}}</a></td>
                                     <td>
                                         @foreach($country as $c)
                                             @if($c->id==$user->country_id)
-                                                <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="btn-link">{{$c->name}}</a>
+                                                <a href="{{url('/user/'.$user->id.'/edit')}}" class="btn-link">{{$c->name}}</a>
                                             @endif
                                         @endforeach
                                     </td>
@@ -93,21 +93,21 @@
                                     <td>
                                         @foreach($status as $s => $s_value)
                                            @if($user->status==$s)
-                                                <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="btn-link"><span class="label label-success">{{$s_value}}</span></a>
+                                                <a href="{{url('/user/'.$user->id.'/edit')}}" class="btn-link"><span class="label label-success">{{$s_value}}</span></a>
                                             @endif
                                         @endforeach 
                                     </td>
-                                    <!-- <td>                                        <a href="{{ url('admin/user') }}/{{ $user->id }}" class="btn-link">{{$user->created_at}}</a></td> -->
+                                    <!-- <td>                                        <a href="{{ url('/user') }}/{{ $user->id }}" class="btn-link">{{$user->created_at}}</a></td> -->
                                     
                                     <td>
                                         <div class="dropleft">
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
 
                                             <div class="dropdown-menu">
-                                                <a href="{{url('admin/user/'.$user->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
-                                                <a href="{{url('admin/user/'.$user->id.'/')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
+                                                <a href="{{url('/user/'.$user->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
+                                                <a href="{{url('/user/'.$user->id.'/')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
 
-                                                <form style="margin-left: 24px;" action="{{url('admin/user/'.$user->id)}}" method="post">
+                                                <form style="margin-left: 24px;" action="{{url('/user/'.$user->id)}}" method="post">
                                                 {!! csrf_field() !!} 
                                                 {{Method_field('DELETE')}}
                                                     <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this User and its Product')" >Delete</button>

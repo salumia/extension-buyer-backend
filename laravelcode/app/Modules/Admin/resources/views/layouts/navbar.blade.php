@@ -48,42 +48,14 @@ l<?php
                     </li>
 
                     <li class="nav-item">
-                        <a href="mailbox_inbox.html" class="nav-link">
+                        <a href="#" class="nav-link">
                             <i class="fa fa-envelope"></i>
                             <span class="badge text-white bg-blue">4</span>
                         </a>
                     </li>
 
                     <!-- Nav Language Start -->
-                    <!--<li class="nav-item dropdown nav-language">
-                        <a href="#" class="nav-link" data-toggle="dropdown">
-                            <img src="{{ asset('admin/img/flags/us.png')}}" alt="">
-                            <span>English</span>
-                            <i class="fa fa-angle-down"></i>
-                        </a>
-
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="">
-                                    <img src="{{ asset('admin/img/flags/de.png')}}" alt="">
-                                    <span>German</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <img src="{{ asset('admin/img/flags/fr.png')}}" alt="">
-                                    <span>French</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="">
-                                    <img src="{{ asset('admin/img/flags/us.png')}}" alt="">
-                                    <span>English</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>-->
-                    <!-- Nav Language End -->
+                    
 
                     <!-- Nav User Start -->
                     <li class="nav-item dropdown nav--user online">
@@ -94,13 +66,13 @@ l<?php
                         </a>
 
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('admin/profile') }}"><i class="far fa-user"></i>Profile</a></li>
-                            <li><a href="{{ url('admin/editProfile/'.$adminId) }}"><i class="fa fa-edit"></i>Edit Profile</a></li>
-                            <li><a href="{{ url('admin/logout') }}"onclick="event.preventDefault();
+                            <li><a href="{{ url('/profile') }}"><i class="far fa-user"></i>Profile</a></li>
+                            <li><a href="{{ url('/editProfile/'.$adminId) }}"><i class="fa fa-edit"></i>Edit Profile</a></li>
+                            <li><a href="{{ url('/logout') }}"onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();"><i class="fa fa-power-off"></i>Logout</a></li>
 
 
-                            <form id="logout-form" action="{{ url('admin/logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
                                         @csrf
                              </form>
                         </ul>

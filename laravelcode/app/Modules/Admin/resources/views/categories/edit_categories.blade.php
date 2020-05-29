@@ -23,7 +23,7 @@
                             <!-- Page Title End -->
 
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ url('admin/categories') }}">Categories</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/categories') }}">Categories</a></li>
                                 <li class="breadcrumb-item active"><span>Edit Category</span></li>
                             </ul>
                         </div>
@@ -68,7 +68,7 @@
                                 @endif
                                 
   
-                                <form id="edit-category-form" action="{{ url('admin/categories/'.$category->id) }}" method="post">
+                                <form id="edit-category-form" action="{{ url('/categories/'.$category->id) }}" method="post">
                                     {{ csrf_field() }}
                                     
                                     {{Method_field('PUT')}}

@@ -49,7 +49,7 @@
                                 @endif
                                 
   
-                                <form id="edit-user-form" action="{{ url('admin/user/'.$user->id) }}" method="post">
+                                <form id="edit-user-form" action="{{ url('/user/'.$user->id) }}" method="post">
                                     {{ csrf_field() }}
                                     
                                     {{Method_field('PUT')}}

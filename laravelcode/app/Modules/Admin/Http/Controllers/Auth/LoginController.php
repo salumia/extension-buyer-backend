@@ -30,7 +30,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = 'admin/dashboard';
+    protected $redirectTo = '/dashboard';
 
     /**
      * Create a new controller instance.
@@ -54,14 +54,6 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
-/*    public function logout(Request $request)
-    {
-        $this->guard('admin')->logout();
-
-        $request->session()->invalidate();
-
-        return $this->loggedOut($request) ?: redirect('admin/login');
-    }*/
 
 
     public function __construct()
@@ -83,13 +75,13 @@ class LoginController extends Controller
         $adminData['name'] = $admin->name;
         $adminData['email'] = $admin->email; 
         session(['adminSessionData' => $adminData]);
-        return redirect('admin/dashboard');
+        return redirect('/dashboard');
     }
     
     public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
-        return redirect('admin/login');
+        return redirect('/login');
     }
 
 

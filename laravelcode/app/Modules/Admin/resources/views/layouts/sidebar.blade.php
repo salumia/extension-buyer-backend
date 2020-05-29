@@ -8,24 +8,24 @@
     <!-- Sidebar Profile Start -->
     <div class="sidebar--profile">
         <div class="profile--img">
-            <a href="profile.html">
+            <a href="#">
                 <img src="{{ asset('admin-assets/img/avatars/01_80x80.png')}}" alt="" class="rounded-circle">
             </a>
         </div>
 
         <div class="profile--name">
-            <a href="profile.html" class="btn-link">{{$adminName}}</a>
+            <a href="#" class="btn-link">{{$adminName}}</a>
         </div>
 
         <div class="profile--nav">
             <ul class="nav">
                 <li class="nav-item">
-                    <a href="{{ url('admin/profile') }}" class="nav-link" title="User Profile">
+                    <a href="{{ url('/profile') }}" class="nav-link" title="User Profile">
                         <i class="fa fa-user"></i>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ url('admin/changePassword') }}" class="nav-link" title="Password change">
+                    <a href="{{ url('/changePassword') }}" class="nav-link" title="Password change">
                         <i class="fa fa-lock"></i>
                     </a>
                 </li>
@@ -35,7 +35,7 @@
                     </a>
                 </li>-->
                 <li class="nav-item">
-                    <a href="{{ url('admin/logout') }}" onclick="event.preventDefault();
+                    <a href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" class="nav-link" title="Logout">
                         <i class="fa fa-sign-out-alt"></i>
                     </a>
@@ -51,7 +51,7 @@
             <li>
                 <ul>
                     <li class="active">
-                        <a href="{{ url('admin/dashboard') }}">
+                        <a href="{{ url('/dashboard') }}">
                             <i class="fa fa-home"></i>
                             <span>Dashboard</span>
                         </a>
@@ -63,8 +63,8 @@
                         </a>
 
                         <ul>
-                            <li><a href="{{ url('admin/user') }}">Users</a></li>
-                            <li><a href="{{ url('admin/user/create') }}">Add User</a></li>
+                            <li><a href="{{ url('/user') }}">Users</a></li>
+                            <li><a href="{{ url('/user/create') }}">Add User</a></li>
                         </ul>
                     </li>
                     <li>
@@ -74,8 +74,8 @@
                         </a>
 
                         <ul>
-                            <li><a href="{{ url('admin/categories') }}">Categories</a></li>
-                            <li><a href="{{ url('admin/categories/create') }}">Add Category</a></li>
+                            <li><a href="{{ url('/categories') }}">Categories</a></li>
+                            <li><a href="{{ url('/categories/create') }}">Add Category</a></li>
                         </ul>
                     </li>
                     <li>
@@ -85,8 +85,8 @@
                         </a>
 
                         <ul>
-                            <li><a href="{{ url('admin/extension') }}">Listing</a></li>
-                            <!-- <li><a href="{{ url('admin/categories/create') }}">Add Category</a></li> -->
+                            <li><a href="{{ url('/extension') }}">Listing</a></li>
+                            
                         </ul>
                     </li>
                     

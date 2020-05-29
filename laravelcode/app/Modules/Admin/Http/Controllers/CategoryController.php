@@ -56,7 +56,7 @@ class CategoryController extends Controller
         $category->category_name=$request->categoryName;
         $category->status=$request->status;
         $category->Save();
-        return redirect('/admin/categories')->with('success','Category Saved Successfully.');
+        return redirect('/categories')->with('success','Category Saved Successfully.');
     }
 
     /**
@@ -102,7 +102,7 @@ class CategoryController extends Controller
         $category->category_name=$request->categoryName;
         $category->status=$request->status;
         $category->Update();
-        return redirect('/admin/categories')->with('success','Category Updated Successfully.');
+        return redirect('/categories')->with('success','Category Updated Successfully.');
     }
 
     /**
@@ -115,6 +115,6 @@ class CategoryController extends Controller
     {
         $category= Category::find($id);
         $category->Delete();
-        return redirect('/admin/categories')->with('success','Category Delete Successfully.');
+        return redirect('/categories')->with('success','Category Delete Successfully.');
     }
 }

@@ -22,7 +22,7 @@
                             <!-- Page Title End -->
 
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item active"><span>Categories</span></li>
                             </ul>
                         </div>
@@ -42,7 +42,7 @@
                         -->    
                         </div>
                         <div class="actions">
-                            <form action="{{url('admin/categories')}}" method="get" class="search">
+                            <form action="{{url('/categories')}}" method="get" class="search">
                                 {{ csrf_field() }}
                                 <input id='search-category' type="text" class="form-control" name="category" placeholder="Name..." required>
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
@@ -93,7 +93,7 @@
                                 <tr>
                                     <td>{{$i}}</td>
                                     <td>
-                                        <a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link">{{$category->category_name}}</a>
+                                        <a href="{{url('/categories/'.$category->id.'/edit')}}" class="btn-link">{{$category->category_name}}</a>
                                     </td>
                                     @php
                                     $status=array('0'=>'Disable','1'=>'Enable');
@@ -101,7 +101,7 @@
                                     <td>
                                         @foreach($status as $s => $s_value)
                                            @if($category->status==$s)
-                                                <a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="btn-link"><span class="label label-success">{{$s_value}}</span></a>
+                                                <a href="{{url('/categories/'.$category->id.'/edit')}}" class="btn-link"><span class="label label-success">{{$s_value}}</span></a>
                                             @endif
                                         @endforeach 
                                     </td>
@@ -111,9 +111,9 @@
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
 
                                             <div class="dropdown-menu">
-                                                <a href="{{url('admin/categories/'.$category->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
+                                                <a href="{{url('/categories/'.$category->id.'/edit')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">Edit</button></a>
 
-                                                <form style="margin-left: 24px;" action="{{url('admin/categories/'.$category->id)}}" method="post">
+                                                <form style="margin-left: 24px;" action="{{url('/categories/'.$category->id)}}" method="post">
                                                 {!! csrf_field() !!} 
                                                 {{Method_field('DELETE')}}
                                                     <button type="submit" id="delete_btn" class="btn btn-rounded btn-outline-info btn-st" onClick="return confirm('Are you really want to delete this Category')" >Delete</button>

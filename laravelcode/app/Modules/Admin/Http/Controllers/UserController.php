@@ -116,7 +116,7 @@ class UserController extends Controller
                 
                 mail($to, $subject, $message, $headers);
             }
-            return redirect('/admin/user')->with('success','User Saved Successfully.');
+            return redirect('/user')->with('success','User Saved Successfully.');
          }
 
         
@@ -164,7 +164,7 @@ class UserController extends Controller
             
             $product_type = ProductType::select('type')->where('id','=',$productType)->first();
             $product['type']=$product_type->type;
-            $received_offer=DB::table('products')->where('user_id', '=', $id)->count();
+            $received_offer=DB::table('offers')->where('product_id', '=', $product_id)->count();
             $product['received_offer'] = $received_offer;
             $extensions[] = $product;
         }
@@ -229,7 +229,7 @@ class UserController extends Controller
         $user->zip_code=$request->zip_code;
         $user->status=$request->status;
         $user->save();
-        return redirect('/admin/user')->with('success','User Update Successfully.');
+        return redirect('/user')->with('success','User Update Successfully.');
     }
 
     /**
@@ -283,6 +283,6 @@ class UserController extends Controller
          $product->Delete();
         }
         $user->Delete();
-        return redirect('/admin/user')->with('success','User Delete Successfully.');
+        return redirect('/user')->with('success','User Delete Successfully.');
     }
 }

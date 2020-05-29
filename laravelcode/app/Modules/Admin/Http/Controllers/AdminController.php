@@ -71,9 +71,9 @@ class AdminController extends Controller
         $adminData['email'] = $email;
         $adminData['name']=$name;
         session(['adminSessionData' => $adminData]);
-        return redirect('admin/editProfile/'.$id)->with('success','Updated successfully.');
+        return redirect('/editProfile/'.$id)->with('success','Updated successfully.');
        }else{
-            return redirect('admin/editProfile/'.$id)->with('error','This email id is already exist'); 
+            return redirect('/editProfile/'.$id)->with('error','This email id is already exist'); 
        }
     }
 
@@ -90,7 +90,7 @@ class AdminController extends Controller
             $admin->password = Hash::make($password);
             $admin->save();
         }
-        return redirect('admin/changePassword')->with('success','Password changed successfully.');
+        return redirect('/changePassword')->with('success','Password changed successfully.');
     }
 
     

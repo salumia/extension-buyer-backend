@@ -23,7 +23,7 @@
                             <!-- Page Title End -->
 
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ url('admin/categories') }}">Categories</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/categories') }}">Categories</a></li>
                                 <li class="breadcrumb-item active"><span>Add Category</span></li>
                             </ul>
                         </div>
@@ -68,7 +68,7 @@
                                 @endif
                                 
   
-                                <form id="add-category-form" action="{{ url('admin/categories') }}" method="post">
+                                <form id="add-category-form" action="{{ url('/categories') }}" method="post">
                                     {{ csrf_field() }} 
                                     
                                     <div class="form-group row">

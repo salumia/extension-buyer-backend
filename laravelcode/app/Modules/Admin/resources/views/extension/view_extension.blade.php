@@ -23,7 +23,7 @@
                             <!-- Page Title End -->
 
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ url('admin/extension') }}">Extension</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/extension') }}">Extension</a></li>
                                 <li class="breadcrumb-item active"><span>View Extension</span></li>
                             </ul>
                         </div>
@@ -259,7 +259,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>Name:</td>
-                                                    <th><a href="{{url('admin/user/'.$product['user_id'])}}" class="btn-link">{{$product['seller']['name']}}</a></th>
+                                                    <th><a href="{{url('/user/'.$product['user_id'])}}" class="btn-link">{{$product['seller']['name']}}</a></th>
                                                 </tr>
                                                 <tr>
                                                     <td>Location:</td>

@@ -50,7 +50,7 @@
                                 @endif
                                 
   
-                                <form id="add-user-form" action="{{ url('admin/user') }}" method="post">
+                                <form id="add-user-form" action="{{ url('/user') }}" method="post">
                                     {{ csrf_field() }} 
                                     
                                     <div class="form-group row">

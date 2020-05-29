@@ -22,7 +22,7 @@
                             <!-- Page Title End -->
 
                             <ul class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ url('admin/dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item active"><span>Extensions</span></li>
                             </ul>
                         </div>
@@ -42,7 +42,7 @@
                          -->   
                         </div>
                         <div class="actions">
-                            <form action="{{url('admin/extension')}}" method="get" class="search">
+                            <form action="{{url('/extension')}}" method="get" class="search">
                                 {{ csrf_field() }}
                                 <input id='search-extension' type="text" class="form-control" name="extension" placeholder="Extension..." required>
                                 <button type="submit" class="btn btn-rounded"><i class="fa fa-search"></i></button>
@@ -99,13 +99,13 @@
                                 <tr>
                                     <td>{{$i}}</td>
                                     <td>
-                                        <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['product_name']}}</a>
+                                        <a href="{{url('/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['product_name']}}</a>
                                     </td> 
                                     <td>
-                                        <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['type']}}</a>
+                                        <a href="{{url('/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['type']}}</a>
                                     </td>
                                     <td>
-                                        <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['seller']}}</a>
+                                        <a href="{{url('/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['seller']}}</a>
                                     </td>
                                     
                                     @php
@@ -128,22 +128,22 @@
                                             @foreach($CompleteStatus as $s => $s_value)
                                                @if($extension['status']==$s)
                                                     
-                                                    <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link" style="margin-left: 23px;">{{$s_value}}</a>
+                                                    <a href="{{url('/extension/'.$extension['id'].'/')}}" class="btn-link" style="margin-left: 23px;">{{$s_value}}</a>
                                                 @endif
                                             @endforeach 
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['received_offer']}}</a>
+                                        <a href="{{url('/extension/'.$extension['id'].'/')}}" class="btn-link">{{$extension['received_offer']}}</a>
                                     </td>
 
-                                    <td><a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="btn-link">{{date('d M,Y ',strtotime($extension['created_at']))}}</a></td>               
+                                    <td><a href="{{url('/extension/'.$extension['id'].'/')}}" class="btn-link">{{date('d M,Y ',strtotime($extension['created_at']))}}</a></td>               
                                     <td>
                                         <div class="dropleft">
                                             <a href="#" class="btn-link" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></a>
 
                                             <div class="dropdown-menu">
-                                                <a href="{{url('admin/extension/'.$extension['id'].'/')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
+                                                <a href="{{url('/extension/'.$extension['id'].'/')}}" class="dropdown-item"><button class="btn btn-rounded btn-outline-info btn-st">View</button></a>
                                             </div>
                                         </div>
                                     </td>
